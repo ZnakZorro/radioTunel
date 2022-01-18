@@ -205,10 +205,17 @@
        </div>
         
         <div class="add">
-          <p><strong>Dodaj radio</strong></p>
+          <p><strong>Dodaj radio:</strong></p>
           <p><span>Name:</span> <input type="text" id="newName"></p>
           <p><span>URL:</span> <input type="text" id="newURL"></p>
           <button onClick='sendURL(this);'>Prześlij</button>
+       </div>    
+        <div class="add">
+          <p><strong>Wyłącz za:</strong></p>
+           <button onClick='radioFETCH("y=15");'>15min</button>
+           <button onClick='radioFETCH("y=60");'>60min</button>
+           <button onClick='radioFETCH("y=120");'>1h</button>
+           <button onClick='radioFETCH("y=240");'>2h</button>
        </div>    
         
         
