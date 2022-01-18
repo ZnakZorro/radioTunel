@@ -1,6 +1,6 @@
 <html lang="pl"><head>
 <meta charset="utf-8">
-<title>#cartoonTunnel</title>
+<title>3-cTunnel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="HandheldFriendly" content="true">
 <meta name="mobile-web-app-capable" content="yes"> 
@@ -149,6 +149,13 @@ document.addEventListener("DOMContentLoaded",function(){
     refreshInfo(1);
     setInterval(()=>{radioFETCH("n=0");},15000);
 });
+const sendURL=(t)=>{
+   let newName = $("#newName").value;
+   let newURL = $("#newURL").value;
+  console.log(newName,newURL);
+  radioFETCH("x="+newURL);
+  radioFETCH("n=0");
+}
   
 </script>
 </head>
@@ -189,7 +196,13 @@ document.addEventListener("DOMContentLoaded",function(){
         <button onClick='radioFETCH("q=2");'>Jazz</button>
         <button onClick='radioFETCH("q=3");'>Classic</button>
         <button onClick='radioFETCH("q=4");'>Flat</button>
-     </div>      
+     </div>
+      
+      <div class="add">
+        <p>Name: <input type="text" id="newName"></p>
+        <p>URL: <input type="text" id="newURL"></p>
+        <button onClick='sendURL(this);'>sendURL</button>
+     </div>    
       
       
     </div>
