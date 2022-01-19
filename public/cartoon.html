@@ -129,9 +129,11 @@
   const opisInfoRadio=(tx)=>{
     let arr = tx.split("!");
     console.log(arr);
-    $("#info").textContent = arr[4];
-    $("#vol").textContent = arr[1];
-    $("#rsid").textContent = arr[2];
+    $("#info").textContent = arr[4] || "info";
+    $("#vol").textContent  = arr[1] || "0";
+    $("#rsid").textContent = arr[2] || "-0";
+    let eq = arr[6] || "0";
+    console.log($$(".tone button")[eq].classList.add("active"))
   }
   const checkForError = response => {
     if (!response.ok) throw Error(response.statusText);
@@ -169,7 +171,7 @@
   const setTone=(t)=>{
     console.log(t.dataset.tone);
     radioFETCH("q="+t.dataset.tone);
-    removeActive("div.muzyka button")
+    removeActive("div.tone button")
     t.classList.add("active");
   }
   const goSleep=(t)=>{
@@ -186,8 +188,8 @@
   
   
   <div id="app" class="wrap">
-      <p>cartoonTunnel</p> 
-      <p><b>[<span id="rsid"></span>dB]</b></p> 
+      <p>cartoonTunnel [<span id="rsid"></span>dB]</p> 
+   
       <div id="info"></div> 
       <div class="col">
           <button onClick='refreshInfo(0);' class="navy">Info()</button> 
@@ -212,7 +214,7 @@
             <button onClick='radioFETCH("r=1");'  class="warn">Replay</button>
     </div> 
          
-    <div class="eq muzyka">
+    <div class="eq tone">
         <button  data-tone="0" onClick='setTone(this);'>Mowa</button>
         <button  data-tone="1" onClick='setTone(this);'>Muzyka</button>
         <button  data-tone="2" onClick='setTone(this);'>Jazz</button>
