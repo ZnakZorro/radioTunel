@@ -237,7 +237,13 @@
     removeActive("div.sleep button")
     t.classList.add("active");
   }
-    
+  
+  const zapiszDane=()=>{
+      let json = JSON.stringify(streamsDEF);
+      radioFETCH("z="+json);
+      refreshInfo(3);
+  }
+  
 </script>
 </head>
     
@@ -267,7 +273,7 @@
     </div>      
         
     <div class="admi">
-            <button onclick='radioFETCH("v=z");' class="warn">Zapisz</button>
+            <button onclick='zapiszDane();' class="warn">Zapisz</button>
             <button onclick='radioFETCH("r=0");' class="warn">Reboot</button>
             <button onClick='radioFETCH("r=1");'  class="warn">Replay</button>
     </div> 
