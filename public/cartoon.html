@@ -190,19 +190,18 @@
     
   }
 
-  const wpiszStacje=()=>{
-    
+  const wpiszStacje=()=>{  
     console.log(streamsDEF,streamsDEF.length)
     if (!streamsDEF) {alert("Brak stacji"); return;}
     let html = "";
       streamsDEF.forEach((s,i)=>{
         if (s) html += '<button data-st="'+i+'" data-n="'+s.n+'" data-a="'+s.a+'" data-stream="'+s.s+'" class="info">'+s.n+'</button>';
       });
-      
       document.querySelector("div.radia").innerHTML = html;
       document.querySelectorAll("div.radia button").forEach((e)=>e.addEventListener('click', radioSlij, false)); 
-      //document.querySelector("div.radia").innerHTML += '<button class="warn" onClick="UsunAtualna()">Usuń aktualną</button>';
+      document.querySelector("div.radia").innerHTML += '<button class="warn" onClick="UsunAtualna()">Usuń aktualną</button>';
   }
+
   document.addEventListener("DOMContentLoaded",function(){
     let odczyt=odczytajStacje();
     console.log(odczyt)
@@ -257,7 +256,7 @@
           <hr> 
           <p><span id="name">Radio</span> <small><span id="stream"></span></small></p> 
           <div class="radia"></div>
-          <div><button class="warn" onClick="UsunAtualna()">Usuń aktualną</button></div>
+          <!--div><button class="warn" onClick="UsunAtualna()">Usuń aktualną</button></div-->
         
     <div id="numery" class="st">
           <button onclick='radioFETCH("s=0");'>1</button>
