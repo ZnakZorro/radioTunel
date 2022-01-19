@@ -133,7 +133,7 @@
     $("#vol").textContent  = arr[1] || "0";
     $("#rsid").textContent = arr[2] || "-0";
     let eq = arr[6] || "0";
-    console.log($$(".tone button")[eq].classList.add("active"))
+    $$(".tone button")[parseInt(eq)].classList.add("active");
   }
   const checkForError = response => {
     if (!response.ok) throw Error(response.statusText);
