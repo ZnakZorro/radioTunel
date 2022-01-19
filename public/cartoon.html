@@ -6,7 +6,9 @@
   <meta name="HandheldFriendly" content="true">
   <meta name="mobile-web-app-capable" content="yes"> 
   <meta name="theme-color" content="#800">
-    
+  <link rel="manifest" href="./radio.web.json">
+<link rel="shortcut icon" type="image/svg+xml" size="any" href="radio.svg"> 
+  
   <style>
    
   *,*::before,*::after {box-sizing: border-box;} 
@@ -133,6 +135,7 @@
     $("#vol").textContent  = arr[1] || "0";
     $("#rsid").textContent = arr[2] || "-0";
     let eq = arr[6] || "0";
+    console.log($$(".tone button")[parseInt(eq)]);
     $$(".tone button")[parseInt(eq)].classList.add("active");
   }
   const checkForError = response => {
