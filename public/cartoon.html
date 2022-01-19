@@ -117,7 +117,7 @@
     $("#vol").textContent  = arr[1] || "0";
     $("#rsid").textContent = arr[2] || "-0";
     let eq = arr[5] || "0";
-    console.log($$(".tone button")[parseInt(eq)]);
+    //console.log($$(".tone button")[parseInt(eq)]);
     removeActive("div.tone button")
     $$(".tone button")[parseInt(eq)].classList.add("active");
   }
@@ -155,15 +155,60 @@
           opisInfoRadio(tx);  
       })
       .catch(e => {console.log(e)})
-    }
-  
-  document.addEventListener("DOMContentLoaded",function(){
-      let html = "";
+  }
+
+  const odczytajStacje=()=>{
+      //console.log("zapiszStacje")
+      //console.log(streamsDEF);
+      if (localStorage.getItem("streamsDEF")){ 
+        let odczyt = localStorage.getItem("streamsDEF");
+        //console.log(odczyt)   
+        return JSON.parse(odczyt);
+      } else return null;   
+  }
+
+  const zapiszStacje=()=>{
+      //console.log("zapiszStacje")
+      //console.log(streamsDEF)
+      localStorage.setItem("streamsDEF", JSON.stringify(streamsDEF));
+  }
+
+  const UsunAtualna=()=>{
+    if (confirm("Usunąć stację") == true) {
+      console.log(streamsDEF);
+      let active = document.querySelector("div.radia button.active");
+      if (active){
+          let nrst = active.dataset.st;
+          console.log(streamsDEF[nrst]);
+          if (nrst) delete streamsDEF[nrst];
+          streamsDEF = streamsDEF.filter(Object);
+          zapiszStacje();
+          wpiszStacje();
+      }
+      console.log(active);
+    } 
+    
+  }
+
+  const wpiszStacje=()=>{
+    
+    console.log(streamsDEF,streamsDEF.length)
+    if (!streamsDEF) {alert("Brak stacji"); return;}
+    let html = "";
       streamsDEF.forEach((s,i)=>{
-        html += '<button data-st="'+i+'" data-n="'+s.n+'" data-a="'+s.a+'" data-stream="'+s.s+'" class="info">'+s.n+'</button>';
+        if (s) html += '<button data-st="'+i+'" data-n="'+s.n+'" data-a="'+s.a+'" data-stream="'+s.s+'" class="info">'+s.n+'</button>';
       });
-      document.querySelector("div.radia").innerHTML += html;
-      document.querySelectorAll("div.radia button").forEach((e)=>e.addEventListener('click', radioSlij, false));    
+      
+      document.querySelector("div.radia").innerHTML = html;
+      document.querySelectorAll("div.radia button").forEach((e)=>e.addEventListener('click', radioSlij, false)); 
+      //document.querySelector("div.radia").innerHTML += '<button class="warn" onClick="UsunAtualna()">Usuń aktualną</button>';
+  }
+  document.addEventListener("DOMContentLoaded",function(){
+    let odczyt=odczytajStacje();
+    console.log(odczyt)
+    if(odczyt) streamsDEF = odczyt;
+    wpiszStacje();
+         
       refreshInfo(1);
       setInterval(()=>{radioFETCH("n=0");},15000);
   });
@@ -171,8 +216,14 @@
      let newName = $("#newName").value;
      let newURL = $("#newURL").value;
     console.log(newName,newURL);
-    radioFETCH("x="+newURL);
+    if(newName && newURL){
+        streamsDEF.push({"a":"0", "n": newName,"s":newURL});
+        $("#name").textContent = newName;
+        zapiszStacje();
+    }
+    if(newURL) radioFETCH("x="+newURL);
     refreshInfo(3);
+    wpiszStacje();
   }
   
   const setTone=(t)=>{
@@ -206,6 +257,7 @@
           <hr> 
           <p><span id="name">Radio</span> <small><span id="stream"></span></small></p> 
           <div class="radia"></div>
+          <div><button class="warn" onClick="UsunAtualna()">Usuń aktualną</button></div>
         
     <div id="numery" class="st">
           <button onclick='radioFETCH("s=0");'>1</button>
