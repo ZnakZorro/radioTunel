@@ -51,6 +51,7 @@
 int volume        = 75;  // 0...100
 int cur_volume    = cur_volume_DEF;
 int cur_station   = 1;
+int cur_host      = 0;
 int last_stations = 2;
 int cur_equalizer = 0;
 
@@ -60,11 +61,14 @@ unsigned long secundDelay = 1000*coIleSekund;
 unsigned long lastSecundDelay = 0;  
 unsigned long licznik = 0;
 
+unsigned long timerSLEEP = 1000 * 60 * 60 * 2;  // 2 godziny
+unsigned long LastTimerSLEEP = 0;
 unsigned long timerDelay15m = 1000 * 60 *15*3;  // 15minut * 3 = 45
 unsigned long lastTime = 0;
+unsigned long millisy = 0;
 
-String radioBuffer1;
-String radioBuffer2;
+String LCD_Buffer1;
+String LCD_Buffer2;
 String jsonBuffer;
 int loopa=0;
 String linia2="";
@@ -111,13 +115,11 @@ void pogoda2LCD(){
       //Serial.print("1= "); Serial.println(clio.linieLCD[1]);
       //Serial.print("2= "); Serial.println(clio.linieLCD[2]);
       clio.println(clio.linieLCD[loopa],1);
-
       
-      if (loopa==1) clio.println(radioBuffer1,0);
+      if (loopa==1) clio.println(LCD_Buffer1,0);
+      if (loopa==2) clio.println(LCD_Buffer2,0);
       if (loopa==3) clio.println(clio.getClock(),0);
-      //if (loopa==2) clio.println(hostURL,0);
-      
-      
+        
       loopa = (loopa+1) % 7;
 /*
     
@@ -149,7 +151,7 @@ void pogoda2LCD(){
       //if (loopa==6)  linia1 = linia1;
       //if (loopa==7)  linia1 = linia1;
       //if (loopa==8) linia1 = linia1;
-      if (loopa==9) linia1 = radioBuffer1;
+      if (loopa==9) linia1 = LCD_Buffer1;
       if (loopa==10) linia1 = isRun;
       if (loopa<10){
         clio.clear(); 
@@ -268,10 +270,13 @@ void setup()
     Serial.print("SSID: ");       Serial.println(WiFi.SSID());
     
         clio.ppp(WiFi.localIP());
-        delay(2800);
-        clio.println(String(WiFi.RSSI()),0);
-        clio.println(String(WiFi.SSID()),1);
-        delay(800);
+        clio.println(String(WiFi.RSSI())+" "+ String(WiFi.SSID()),1);
+        delay(2900);
+        //clio.println(String(WiFi.RSSI()),0);
+        //clio.println(String(WiFi.SSID()),1);
+        //clio.println(String(WiFi.RSSI())+" "+ String(WiFi.SSID()),1);
+        //clio.println(String(,1);
+        //delay(1000);
     
     installServer();    
     Serial.printf("Connect to ES8388 codec... ");
@@ -305,6 +310,7 @@ void setup()
       listFileFromSPIFFS();
       audio.connecttoFS(SPIFFS, "/r.mp3");
       //playCurStation();
+      LastTimerSLEEP = millis();
       
 }
 //----------------------------------------------------------------------------------------------------------------------
@@ -312,18 +318,26 @@ void setup()
 
 void loop()
 {
+    millisy = millis();
     audio.loop();
 
-  if ((millis() - lastTime) > timerDelay15m) {
+  // timesleep time to sleep
+  if ((millisy - LastTimerSLEEP) > timerSLEEP) {
+      Serial.println("Sleep !!!!!!!!!!!!!!!!!!!");  
+      esp_reBootSleep("2");
+      LastTimerSLEEP = millis();
+  }
+  
+  if ((millisy - lastTime) > timerDelay15m) {
       getYrnoPogoda(); 
       Serial.println("Pogoda --------------");  
       lastTime = millis();
   }
   
-  if ((millis() - lastSecundDelay) > secundDelay) {
+  if ((millisy - lastSecundDelay) > secundDelay) {
     //Serial.println("pogoda2LCD --------------"); 
       pogoda2LCD();
-      lastSecundDelay = millis();
+      lastSecundDelay = millisy;
   }
     
 
@@ -385,16 +399,16 @@ void audio_showstation(const char *info){
   snprintf(extraInfo, 64, info);
     //Serial.print("station     ");Serial.println(info);
     onScreens("audio_showstation::",String(info).c_str(),326);
-    radioBuffer1 = String(info).substring(0,16);
-    //radioBuffer2 = String(info).substring(16,32);
+    //LCD_Buffer1 = String(info).substring(0,16);
+    //LCD_Buffer2 = String(info).substring(16,32);
     es_volume(volume);
 }
 void audio_showstreaminfo(const char *info){
-  snprintf(extraInfo, 64, info);
+  //snprintf(extraInfo, 64, info);
     //Serial.print("streaminfo  ");Serial.println(info);
     onScreens("streaminfo::",String(info).c_str(),187);
-    radioBuffer1 = String(info).substring(0,16);
-    //radioBuffer2 = String(info).substring(16,32);
+    //LCD_Buffer1 = String(info).substring(0,16);
+    //LCD_Buffer2 = String(info).substring(16,32);
 }
 void audio_showstreamtitle(const char *info){
   snprintf(extraInfo, 64, info);
@@ -427,9 +441,8 @@ String getRadioInfo(){
   String n = String(cur_station);
   String s = String(clio.radia[cur_station].info);
   String ri    = String(WiFi.RSSI());
-    radioBuffer1 = extraInfo;
-    radioBuffer2 = s;
-
+    LCD_Buffer1 = extraInfo;
+    //LCD_Buffer2 = s;
   return n+sep+v+sep+ri+sep+s+sep+String(extraInfo)+sep+q+sep+hostURL;
 }
 
@@ -448,6 +461,7 @@ void setCurVolume(){
 
 //ajax
 void audio_ChangeVolume(String ParamValue){
+  LastTimerSLEEP = millis()-10000;
     if (ParamValue=="p") cur_volume++;
     if (ParamValue=="m") cur_volume--;
     if (ParamValue=="*") cur_volume++;
@@ -464,6 +478,7 @@ void audio_SetStationNr(String ParamValue){
 
 void audio_SetStationUrl(const String ParamValue){
         hostURL = ParamValue;
+        
           Serial.println("#549 audio_SetStationUrl hostURL==="); 
           Serial.println(hostURL); 
 
@@ -476,10 +491,17 @@ void audio_SetStationUrl(const String ParamValue){
       audio.setVolume(cur_volume);
       es_volume(volume);
       savePreferences();
+      Serial.print("cur_host=");Serial.println(cur_host);
+      clio.radia[cur_host].stream = hostURL.c_str();
+      clio.radia[cur_station].info = ("host"+String(cur_host)).c_str();  
+      cur_host++;
+      if (cur_host>3) cur_host=0;
+
+      
 }
 
 void audio_ChangeStation(String ParamValue){
-    //int valu = ParamValue.toInt();
+    LastTimerSLEEP = millis()-10000;
     Serial.println('+++++++++++++++++++++');
     //Serial.println(valu);
     //Serial.println(isnan(valu));
@@ -564,6 +586,13 @@ void audio_SetEQ(String ParamValue){
 }
 
 
+void ESP_sleep_za(const String ParamValue){
+    unsigned long newTime = ParamValue.toInt(); // time in minutes
+    timerSLEEP = newTime * 60 *1000;
+    Serial.println("#595 new Sleep "+String(timerSLEEP));
+    //clio.println("Sleep "+String(ParamValue),1);
+    LCD_Buffer2="Sleep "+String(ParamValue);
+}
 
 void esp_reBootSleep(const String ParamValue){
     if (ParamValue=="0") { 
@@ -577,6 +606,7 @@ void esp_reBootSleep(const String ParamValue){
     if (ParamValue=="2") {
         audio.stopSong();
         es_volume(0); 
+        clio.drukLCD("Sleep on PIN18");
         delay(500); 
         esp_sleep_enable_ext0_wakeup(GPIO_NUM_18,0);
         esp_deep_sleep_start();
@@ -650,13 +680,14 @@ void installServer(){
   // AJAXY *************************
   server.on("/radio", HTTP_GET, [](AsyncWebServerRequest *request){
     clio.ledled();
+    
     //last_get_url = "";
     /******************************/
      //List all parameters
      int params = request->params();
      for(int i=0;i<params;i++){
           AsyncWebParameter* p = request->getParam(i); 
-          //Serial.print("get=");Serial.print(p->name().c_str()); Serial.print("="); Serial.println(p->value().c_str());
+          //Serial.print("#693 get?");Serial.print(p->name().c_str()); Serial.print("="); Serial.println(p->value().c_str());
           
           String ParamName  = String(p->name());
           String ParamValue = p->value();
@@ -672,9 +703,8 @@ void installServer(){
            if (ParamName=="qq")  audio_SetEQ(ParamValue);
            if (ParamName=="z")  savePreferences(); 
            if (ParamName=="x")  audio_SetStationUrl(ParamValue);
-           
            if (ParamName=="r")  {esp_reBootSleep(ParamValue);}
-           
+           if (ParamName=="y")  ESP_sleep_za(ParamValue);
            
           if (ParamName=="n") { // drugi parametr
               //onScreens(("ParamName="+String(ParamName)).c_str(),917);
