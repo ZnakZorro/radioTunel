@@ -108,13 +108,26 @@
   console.log("urlDEF=",urlDEF);
   localStorage.setItem("urlDEF", urlDEF); 
   let url = urlDEF;
-    
+   
+  
+  const opisInfoRadio=(tx)=>{
+    let arr = tx.split("!");
+    console.log(arr);
+    $("#info").textContent = arr[4] || "info";
+    $("#vol").textContent  = arr[1] || "0";
+    $("#rsid").textContent = arr[2] || "-0";
+    let eq = arr[5] || "0";
+    console.log($$(".tone button")[parseInt(eq)]);
+    removeActive("div.tone button")
+    $$(".tone button")[parseInt(eq)].classList.add("active");
+  }
+
   const removeActive=(dom)=>{
     $$(dom).forEach((e)=>e.classList.remove("active"));
   }
   
   const radioSlij=(el)=>{
-      removeActive("div.radia button")
+      removeActive("div.radia button");
       el.target.classList.add("active");
       let data = el.target.dataset;
       $("#name").textContent = data.n;
@@ -128,16 +141,7 @@
   const refreshInfo=(sek=5)=> {
      setTimeout(()=>{radioFETCH("n=0");},1000*sek);
   }
-  const opisInfoRadio=(tx)=>{
-    let arr = tx.split("!");
-    console.log(arr);
-    $("#info").textContent = arr[4] || "info";
-    $("#vol").textContent  = arr[1] || "0";
-    $("#rsid").textContent = arr[2] || "-0";
-    let eq = arr[5] || "0";
-    console.log($$(".tone button"));
-    $$(".tone button")[parseInt(eq)].classList.add("active");
-  }
+  
   const checkForError = response => {
     if (!response.ok) throw Error(response.statusText);
     return response.text();
