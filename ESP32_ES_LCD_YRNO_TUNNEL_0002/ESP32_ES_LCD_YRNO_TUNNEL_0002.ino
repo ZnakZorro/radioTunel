@@ -433,17 +433,28 @@ void audio_eof_speech(const char *info){
 }
 
 
-
+//inforadio info radio
 String getRadioInfo(){
   const String      sep = "!"; 
   String v = String(cur_volume);
   String q = String(cur_equalizer);
   String n = String(cur_station);
-  String s = String(clio.radia[cur_station].info);
+  String s = "getRadioInfo";    //String(clio.radia[cur_station].info);
   String ri    = String(WiFi.RSSI());
     LCD_Buffer1 = extraInfo;
     //LCD_Buffer2 = s;
-  return n+sep+v+sep+ri+sep+s+sep+String(extraInfo)+sep+q+sep+hostURL;
+    String czas = String((timerSLEEP/(1000*60)));
+  return n+sep+v+sep+ri+sep+s+sep+String(extraInfo)+sep+q+sep+czas+sep+hostURL;
+/*
+0: "0"
+1: "3"
+2: "-49"
+3: "TOK-FM"
+4: "Radio Nowy Świat - Pion i poziom"
+5: ""
+6: "1"
+7: "http://stream.rcs.revma.com/ypqt40u0x1zuv"
+*/  
 }
 
 
@@ -606,7 +617,8 @@ void esp_reBootSleep(const String ParamValue){
     if (ParamValue=="2") {
         audio.stopSong();
         es_volume(0); 
-        clio.drukLCD("Sleep on PIN18");
+        String czas = String((timerSLEEP/(1000*60)));
+        clio.drukLCD("Sleep " + czas);
         delay(500); 
         esp_sleep_enable_ext0_wakeup(GPIO_NUM_18,0);
         esp_deep_sleep_start();
@@ -614,8 +626,12 @@ void esp_reBootSleep(const String ParamValue){
   
 }
 
-
-
+//qqqqqqqqqqqqqqqq?????????????????????????????????????????????????????////////////////////???????????????/
+void saveDATA(const String ParamValue){
+    Serial.println("saveDATA==============");
+    Serial.println(ParamValue);
+    savePreferences();
+}
 
 
 /************* SERVER *******************/
@@ -661,7 +677,7 @@ void installServer(){
   });
 */
   
-  server.on("/teren.web.json", HTTP_GET, [](AsyncWebServerRequest *request){
+  server.on("/radio.web.json", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(200, "application/json", TEREN_WEB_JSON);
   });
   server.on("/stacje.json", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -701,7 +717,7 @@ void installServer(){
            if (ParamName=="t")  audio_SetStationNr(ParamValue);
            if (ParamName=="q")  audio_SetEQNr(ParamValue);
            if (ParamName=="qq")  audio_SetEQ(ParamValue);
-           if (ParamName=="z")  savePreferences(); 
+           if (ParamName=="z")  saveDATA(ParamValue); 
            if (ParamName=="x")  audio_SetStationUrl(ParamValue);
            if (ParamName=="r")  {esp_reBootSleep(ParamValue);}
            if (ParamName=="y")  ESP_sleep_za(ParamValue);
