@@ -1,11 +1,11 @@
 <html lang="pl">
 <head>
   <meta charset="utf-8">
-  <title>4-cTunnel</title>
+  <title>5-cTunnel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="HandheldFriendly" content="true">
   <meta name="mobile-web-app-capable" content="yes"> 
-  <meta name="theme-color" content="#214960">
+  <meta name="theme-color" content="#800">
     
   <style>
    
@@ -16,6 +16,7 @@
       padding: 0;
       margin: 0;  
     }
+    div {margin:0.25em 0;}
   .wrap {
       z-index: 2;
       margin: auto;
@@ -67,12 +68,12 @@
       background: #f4f4f4;
       margin: 0.5em auto;  
     }
-    div.eq button {font-size:0.8em;padding: 0.5em;background:#e06;}
+    div.eq button {font-size:0.85em;padding: 0.65em;background:#842;}
 
     div.add {background-color: whitesmoke; margin-top: 0.5em;}
     div.add p {margin-bottom: 0.5em;}
     div.add span {display: inline-block;min-width:4em;}
-    div.add input {width: calc(99% - 4em);}
+    div.add input {width: calc(99% - 5em);font-size: 1rem;}
   </style>
   
   <script>
@@ -88,14 +89,14 @@
   {"a":"2", "n": "ClassicFM", "s":"http://media-the.musicradio.com/ClassicFM"},
   {"a":"1", "n": "RMF Classic","s":"http://www.rmfon.pl/n/rmfclassic.pls"},
   {"a":"1", "n": "Dwojka","s":"http://mp3.polskieradio.pl:8952/;"},
-  {"a":"1", "n": "RockService","s":"http://stream.open.fm/379"},
+  //{"a":"1", "n": "RockService","s":"http://stream.open.fm/379"},
   {"a":"1", "n": "101 Jazz","s":"https://ais-sa2.cdnstream1.com/b22139_128mp3"},
   {"a":"0", "n": "Szczecin","s":"http://stream4.nadaje.com:11986/prs.aac.m3u"},
-  {"a":"0", "n": "Anty-Radio","s":"http://www.emsoft.ct8.pl/inne/anty.m3u"},
-  {"a":"0", "n": "Campus","s":"http://193.0.98.66:8002/listen.pls"},
-  {"a":"0", "n": "PR24","s":"http://stream3.polskieradio.pl:8480/listen.pls"},
-  {"a":"0", "n": "Szczecin Plus","s":"http://waw01-01.ic.smcdn.pl:8000/4260-1.aac.m3u"},
-  {"a":"0", "n": "Szczecin Eska","s":"http://waw01-01.ic.smcdn.pl:8000/2260-1.aac.m3u"},
+  //{"a":"0", "n": "Anty-Radio","s":"http://www.emsoft.ct8.pl/inne/anty.m3u"},
+  //{"a":"0", "n": "Campus","s":"http://193.0.98.66:8002/listen.pls"},
+  //{"a":"0", "n": "PR24","s":"http://stream3.polskieradio.pl:8480/listen.pls"},
+  //{"a":"0", "n": "Szczecin Plus","s":"http://waw01-01.ic.smcdn.pl:8000/4260-1.aac.m3u"},
+  //{"a":"0", "n": "Szczecin Eska","s":"http://waw01-01.ic.smcdn.pl:8000/2260-1.aac.m3u"},
   ];
   //console.log(streamsDEF);
     
@@ -116,6 +117,8 @@
       let data = el.target.dataset;
       $("#name").textContent = data.n;
       $("#stream").textContent = data.stream;
+      $("#newName").value=data.n;
+      $("#newURL").value=data.stream;
       radioFETCH("x="+data.stream);
       refreshInfo(5);
   }
@@ -160,7 +163,20 @@
      let newURL = $("#newURL").value;
     console.log(newName,newURL);
     radioFETCH("x="+newURL);
-    radioFETCH("n=0");
+    refreshInfo(3);
+  }
+  
+  const setTone=(t)=>{
+    console.log(t.dataset.tone);
+    radioFETCH("q="+t.dataset.tone);
+    removeActive("div.muzyka button")
+    t.classList.add("active");
+  }
+  const goSleep=(t)=>{
+    console.log(t.dataset.time);
+    radioFETCH("y="+t.dataset.time);
+    removeActive("div.sleep button")
+    t.classList.add("active");
   }
     
 </script>
@@ -171,7 +187,7 @@
   
   <div id="app" class="wrap">
       <p>cartoonTunnel</p> 
-      <p><b>[<span id="name"></span>, <span id="rsid"></span>dB]</b></p> 
+      <p><b>[<span id="rsid"></span>dB]</b></p> 
       <div id="info"></div> 
       <div class="col">
           <button onClick='refreshInfo(0);' class="navy">Info()</button> 
@@ -179,48 +195,48 @@
               <span id="vol">0</span>  
           <button onClick='radioFETCH("v=p");refreshInfo(2);' class="succ">Vol ++</button> 
           <hr> 
-          <p>Host: <small><span id="stream"></span></small></p> 
+          <p><span id="name">Radio</span> <small><span id="stream"></span></small></p> 
           <div class="radia"></div>
-        <br />
-        <div id="numery" class="st">
+        
+    <div id="numery" class="st">
           <button onclick='radioFETCH("s=0");'>1</button>
           <button onclick='radioFETCH("s=1");'>2</button>
           <button onclick='radioFETCH("s=2");'>3</button>
           <button onclick='radioFETCH("s=3");'>4</button>
           <button onclick='radioFETCH("s=4");'>5</button>
-        </div>      
-        <br />
-       <div class="admi">
-            <button onclick='radioFETCH("v=z");' class="warn">Zapisz preferencje</button>
-            <button onclick='radioFETCH("v=r");' class="warn">Reboot</button>
-            <button onClick='radioFETCH("r=1")'  class="warn">Replay</button>
-       </div> 
-         
-       <div class="eq">
-          <button onClick='radioFETCH("q=0");'>Mowa</button>
-          <button onClick='radioFETCH("q=1");'>Muzyka</button>
-          <button onClick='radioFETCH("q=2");'>Jazz</button>
-          <button onClick='radioFETCH("q=3");'>Classic</button>
-          <button onClick='radioFETCH("q=4");'>Flat</button>
-       </div>
+    </div>      
         
-        <div class="add">
-          <p><strong>Dodaj radio:</strong></p>
+    <div class="admi">
+            <button onclick='radioFETCH("v=z");' class="warn">Zapisz</button>
+            <button onclick='radioFETCH("r=0");' class="warn">Reboot</button>
+            <button onClick='radioFETCH("r=1");'  class="warn">Replay</button>
+    </div> 
+         
+    <div class="eq muzyka">
+        <button  data-tone="0" onClick='setTone(this);'>Mowa</button>
+        <button  data-tone="1" onClick='setTone(this);'>Muzyka</button>
+        <button  data-tone="2" onClick='setTone(this);'>Jazz</button>
+        <button  data-tone="3" onClick='setTone(this);'>Classic</button>
+        <button  data-tone="4" onClick='setTone(this);'>Flat</button>
+    </div>
+
+    <div class="eq sleep">
+        <p>Wyłącz za:</p>
+        <button data-time="15"  onClick='goSleep(this);'>15min</button>
+        <button data-time="60"  onClick='goSleep(this);'>1h</button>
+        <button data-time="120" onClick='goSleep(this);'>2h</button>
+        <button data-time="240" onClick='goSleep(this);'>4h</button>
+        <button data-time="480" onClick='goSleep(this);'>8h</button>
+    </div>    
+          
+    <div class="add">
+          <p>Dodaj radio</p>
           <p><span>Name:</span> <input type="text" id="newName"></p>
           <p><span>URL:</span> <input type="text" id="newURL"></p>
           <button onClick='sendURL(this);'>Prześlij</button>
-       </div>    
-        <div class="eq">
-          <p><strong>Wyłącz za:</strong></p>
-           <button onClick='radioFETCH("y=15");'>15min</button>
-           <button onClick='radioFETCH("y=60");'>60min</button>
-           <button onClick='radioFETCH("y=120");'>1h</button>
-           <button onClick='radioFETCH("y=240");'>2h</button>
-           <button onClick='radioFETCH("y=480");'>4h</button>
-           <button onClick='radioFETCH("y=960");'>8h</button>
-       </div>    
-        
-        
+    </div>
+
+  
       </div>
   </div>
   </body>
