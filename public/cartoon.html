@@ -326,36 +326,41 @@
       </label>
       <input type="checkbox" id="state" hidden>
       <div class="content">   
+        <!--acordions-->
 
-          <div id="numery" class="st">
+        <div class="sm sleep">
+          <p>Wyłącz za:</p>
+          <button data-time="15"  onClick='goSleep(this);'>15m</button>
+          <button data-time="60"  onClick='goSleep(this);'>1h</button>
+          <button data-time="120" onClick='goSleep(this);'>2h</button>
+          <button data-time="240" onClick='goSleep(this);'>4h</button>
+          <button data-time="480" onClick='goSleep(this);'>8h</button>
+      </div> 
+
+      <div class="sm eq tone">
+        <button  data-tone="0" onClick='setTone(this);'>Mowa</button>
+        <button  data-tone="1" onClick='setTone(this);'>Muzyka</button>
+        <button  data-tone="2" onClick='setTone(this);'>Jazz</button>
+        <button  data-tone="3" onClick='setTone(this);'>Classic</button>
+        <button  data-tone="4" onClick='setTone(this);'>Flat</button>
+      </div>      
+      
+          <!--div id="numery" class="st">
             <button onclick='radioFETCH("s=0");'>1</button>
             <button onclick='radioFETCH("s=1");'>2</button>
             <button onclick='radioFETCH("s=2");'>3</button>
             <button onclick='radioFETCH("s=3");'>4</button>
             <button onclick='radioFETCH("s=4");'>5</button>
-          </div>               
+          </div-->               
           <div class="admi">
               <button onclick='zapiszDane();' class="warn">Zapisz</button>
               <button onclick='radioFETCH("r=0");' class="warn">Reboot</button>
               <button onClick='radioFETCH("r=1");'  class="warn">Replay</button>
           </div> 
             
-          <div class="sm eq tone">
-              <button  data-tone="0" onClick='setTone(this);'>Mowa</button>
-              <button  data-tone="1" onClick='setTone(this);'>Muzyka</button>
-              <button  data-tone="2" onClick='setTone(this);'>Jazz</button>
-              <button  data-tone="3" onClick='setTone(this);'>Classic</button>
-              <button  data-tone="4" onClick='setTone(this);'>Flat</button>
-          </div>
 
-          <div class="sm sleep">
-              <p>Wyłącz za:</p>
-              <button data-time="15"  onClick='goSleep(this);'>15m</button>
-              <button data-time="60"  onClick='goSleep(this);'>1h</button>
-              <button data-time="120" onClick='goSleep(this);'>2h</button>
-              <button data-time="240" onClick='goSleep(this);'>4h</button>
-              <button data-time="480" onClick='goSleep(this);'>8h</button>
-          </div>    
+
+   
               
           <div class="add bg">
               <p>Dodaj radio</p>
