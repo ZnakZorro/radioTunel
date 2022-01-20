@@ -31,7 +31,7 @@
       grid-template-columns: repeat(auto-fit,minmax(120px,1fr));
   }   
   button {
-    padding: 10px 20px;
+    padding: 0.75em;
     border: 1px solid #ddd;
     background-color: #50bfff;
     color: #fff;
@@ -40,6 +40,7 @@
     font-size: 12pt; 
     font-family: "Verdana";
     cursor: pointer;
+    min-width: 3em;
   }
   button.succ {
     background-color: #13ce66;
@@ -80,7 +81,31 @@
     div.add input {width: calc(99% - 5em);font-size: 1rem;}
     input[type="file" i] {font-size: 1rem;}
   </style>
-  
+  <style>
+    .accordion {
+      background-color: #eee;
+      color: #444;
+      cursor: pointer;
+      padding: 18px;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;
+      transition: 0.4s;
+    }
+    
+    .active, .accordion:hover {
+      background-color: #ccc; 
+    }
+    
+    .panel {
+      padding: 0 18px;
+      display: none;
+      background-color: white;
+      overflow: hidden;
+    }
+    </style>
   <script>
   const $=e=>document.querySelector(e);
   const $$=e=>document.querySelectorAll(e);
@@ -253,71 +278,77 @@
 </script>
 </head>
     
-  <body>
+<body>
   
   
   <div id="app" class="wrap">
-      <p>cartoonTunnel [<span id="rsid"></span>dB]</p> 
-   
+      <p>cartoonTunnel [<span id="rsid"></span>dB]</p>  
       <div id="info"></div> 
       <div class="col">
-          <button onClick='refreshInfo(0);' class="navy">Info()</button> 
-          <button onClick='radioFETCH("v=m");refreshInfo(2);'class="gitt">Vol --</button> 
-              <span id="vol">0</span>  
-          <button onClick='radioFETCH("v=p");refreshInfo(2);' class="succ">Vol ++</button> 
-          <hr> 
-          <p><span id="name">Stacje</span> <small><span id="stream"></span></small></p> 
-          <div class="radia"></div>
-          <div><button class="warn" onClick="UsunAtualna()">Usuń aktywną</button></div>
-        
-    <div id="numery" class="st">
-          <button onclick='radioFETCH("s=0");'>1</button>
-          <button onclick='radioFETCH("s=1");'>2</button>
-          <button onclick='radioFETCH("s=2");'>3</button>
-          <button onclick='radioFETCH("s=3");'>4</button>
-          <button onclick='radioFETCH("s=4");'>5</button>
-    </div>      
-        
-    <div class="admi">
-            <button onclick='zapiszDane();' class="warn">Zapisz</button>
-            <button onclick='radioFETCH("r=0");' class="warn">Reboot</button>
-            <button onClick='radioFETCH("r=1");'  class="warn">Replay</button>
-    </div> 
-         
-    <div class="eq tone">
-        <button  data-tone="0" onClick='setTone(this);'>Mowa</button>
-        <button  data-tone="1" onClick='setTone(this);'>Muzyka</button>
-        <button  data-tone="2" onClick='setTone(this);'>Jazz</button>
-        <button  data-tone="3" onClick='setTone(this);'>Classic</button>
-        <button  data-tone="4" onClick='setTone(this);'>Flat</button>
-    </div>
-
-    <div class="eq sleep">
-        <p>Wyłącz za:</p>
-        <button data-time="15"  onClick='goSleep(this);'>15min</button>
-        <button data-time="60"  onClick='goSleep(this);'>1h</button>
-        <button data-time="120" onClick='goSleep(this);'>2h</button>
-        <button data-time="240" onClick='goSleep(this);'>4h</button>
-        <button data-time="480" onClick='goSleep(this);'>8h</button>
-    </div>    
-          
-    <div class="add">
-      <p>Dodaj radio</p>
-      <p><span>Name:</span> <input type="text" id="newName"></p>
-      <p><span>URL:</span> <input type="text" id="newURL"></p>
-      <button onClick='sendURL(this);'>Prześlij</button>
-    </div>
-
-<div class="dysk" style="margin-top:2em;background-color: #eee;">
-  <p><button onClick='dyskZapisz(this);' class="info"  >Zapisz na dysku</button></p>
-  <br />
-<p>Wczytaj: <input type="file" id="file-input"></p>
-  <!--button onClick='dyskWczytaj(this);' class="info" >Wczytaj z dysku</button-->
-</div>
-
-
+            <button onClick='refreshInfo(0);' class="navy">Info()</button> 
+            <button onClick='radioFETCH("v=m");refreshInfo(2);'class="gitt">Vol --</button> 
+                <span id="vol">0</span>  
+            <button onClick='radioFETCH("v=p");refreshInfo(2);' class="succ">Vol ++</button> 
+            <hr> 
+            <p><span id="name">Stacje</span> <small><span id="stream"></span></small></p> 
+            <div class="radia"></div>
+            <div><button class="warn" onClick="UsunAtualna()">Usuń aktywną</button></div>
+      </div> 
+      <div id="numery" class="st">
+            <button onclick='radioFETCH("s=0");'>1</button>
+            <button onclick='radioFETCH("s=1");'>2</button>
+            <button onclick='radioFETCH("s=2");'>3</button>
+            <button onclick='radioFETCH("s=3");'>4</button>
+            <button onclick='radioFETCH("s=4");'>5</button>
       </div>
-  </div>
+      
+      
+      <button class="accordion" id="wiecej">Więcej</button>
+      <div class="panel">          
+          <div class="admi">
+              <button onclick='zapiszDane();' class="warn">Zapisz</button>
+              <button onclick='radioFETCH("r=0");' class="warn">Reboot</button>
+              <button onClick='radioFETCH("r=1");'  class="warn">Replay</button>
+          </div> 
+            
+          <div class="eq tone">
+              <button  data-tone="0" onClick='setTone(this);'>Mowa</button>
+              <button  data-tone="1" onClick='setTone(this);'>Muzyka</button>
+              <button  data-tone="2" onClick='setTone(this);'>Jazz</button>
+              <button  data-tone="3" onClick='setTone(this);'>Classic</button>
+              <button  data-tone="4" onClick='setTone(this);'>Flat</button>
+          </div>
+
+          <div class="eq sleep">
+              <p>Wyłącz za:</p>
+              <button data-time="15"  onClick='goSleep(this);'>15m</button>
+              <button data-time="60"  onClick='goSleep(this);'>1h</button>
+              <button data-time="120" onClick='goSleep(this);'>2h</button>
+              <button data-time="240" onClick='goSleep(this);'>4h</button>
+              <button data-time="480" onClick='goSleep(this);'>8h</button>
+          </div>    
+              
+          <div class="add">
+              <p>Dodaj radio</p>
+              <p><span>Name:</span> <input type="text" id="newName"></p>
+              <p><span>URL:</span> <input type="text" id="newURL"></p>
+              <button onClick='sendURL(this);'>Prześlij</button>
+          </div>
+
+          <div class="dysk" style="margin-top:2em;background-color: #eee;">
+              <p><button onClick='dyskZapisz(this);' class="info"  >Zapisz na dysku</button></p>
+              <br />
+              <p>Wczytaj: <input type="file" id="file-input"></p>
+          </div>
+
+      </div><!--panel-->
+
+  </div><!--wrap-->
+      
+  
+
+
+       
 
   <script>
     
@@ -347,7 +378,17 @@
     reader.readAsText(file);
   }
 
-
+  let wiecej = document.getElementById("wiecej");
+  wiecej.addEventListener("click", function() {
+    //console.log(this)
+    this.classList.toggle("active");
+    let panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  });
 
     //document.getElementById('file-input').addEventListener('change', readSingleFile, false);
 
@@ -366,5 +407,5 @@
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js" integrity="sha512-csNcFYJniKjJxRWRV1R7fvnXrycHP6qDR21mgz1ZP55xY5d+aHLfo9/FcGDQLfn2IfngbAHd8LdfsagcCqgTcQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-  </body>
-  </html>
+</body>
+</html>
