@@ -156,14 +156,14 @@
     removeActive("div.tone button")
     $$(".tone button")[parseInt(eq)].classList.add("active");
     if (host){
-      console.log("====================host=",host);
+      //console.log("====================host=",host);
       // find host in streamsDEF
       streamsDEF.forEach((a,nr)=>{
-        console.log(a.s,host)
+        //console.log(a.s,host)
         if (a.s===host){
-            console.log(nr);
+            //console.log(nr);
             let data = streamsDEF[nr];
-            console.log(data);
+            //console.log(data);
             removeActive("div.radia button")
             $("#st"+nr).classList.add("active");
             
