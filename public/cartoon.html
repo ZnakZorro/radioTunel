@@ -1,7 +1,7 @@
 <html lang="pl">
 <head>
   <meta charset="utf-8">
-  <title>1-cTunnel</title>
+  <title>CartoonTunnel-1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="HandheldFriendly" content="true">
   <meta name="mobile-web-app-capable" content="yes"> 
@@ -259,6 +259,7 @@
          
       refreshInfo(1);
       setInterval(()=>{radioFETCH("n=0");},15000);
+      $("#title").textContent = document.title;
   });
   const sendURL=(t)=>{
      let newName = $("#newName").value;
@@ -300,7 +301,7 @@
   
   
   <div id="app" class="wrap">
-      <p>cartoonTunnel [<span id="rsid"></span>dB]</p>  
+      <p><span id="title">cartoonTunnel</span> [<span id="rsid"></span>dB]</p>  
       <div id="info"></div> 
       <div class="col">
             <button onClick='refreshInfo(0);' class="navy">Info()</button> 
