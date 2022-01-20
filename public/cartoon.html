@@ -156,13 +156,19 @@
     removeActive("div.tone button")
     $$(".tone button")[parseInt(eq)].classList.add("active");
     if (host){
-      console.log("host=",host);
+      console.log("====================host=",host);
       // find host in streamsDEF
       streamsDEF.forEach((a,nr)=>{
+        console.log(a.s,host)
         if (a.s===host){
-            console.log(nr)
+            console.log(nr);
+            let data = streamsDEF[nr];
+            console.log(data);
             removeActive("div.radia button")
-            $("#st"+nr).classList.add("active")
+            $("#st"+nr).classList.add("active");
+            
+            $("#name").textContent = data.n;
+            $("#stream").textContent = data.stream;
         }
       });
     }    
@@ -387,6 +393,8 @@
     }
 
   const readSingleFile=(e)=>{
+    console.log(e)
+    console.log(e.target.files)
     let file = e.target.files[0];
     if (!file) {
       return;
@@ -403,9 +411,7 @@
     };
     reader.readAsText(file);
   }
-document.getElementById('file-input').addEventListener('change', readSingleFile, false);  
-  
-  
+  document.getElementById('file-input').addEventListener('change', readSingleFile, false);
 /*
   let wiecej = document.getElementById("wiecej");
   wiecej.addEventListener("click", function() {
@@ -419,7 +425,7 @@ document.getElementById('file-input').addEventListener('change', readSingleFile,
     }
   });
 */
-    //document.getElementById('file-input').addEventListener('change', readSingleFile, false);
+    //
 
 
     /*const dyskWczytaj=(t)=>{
