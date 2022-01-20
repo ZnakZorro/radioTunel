@@ -7,6 +7,8 @@
   <meta name="mobile-web-app-capable" content="yes"> 
   <meta name="theme-color" content="#800">
   <link rel="manifest" href="./radio.web.json">
+  <script src="./js/FileSaver.min.js"></script>
+
 <link rel="shortcut icon" type="image/svg+xml" size="any" href="radio.svg"> 
   
   <style>
@@ -296,14 +298,65 @@
     </div>    
           
     <div class="add">
-          <p>Dodaj radio</p>
-          <p><span>Name:</span> <input type="text" id="newName"></p>
-          <p><span>URL:</span> <input type="text" id="newURL"></p>
-          <button onClick='sendURL(this);'>Prześlij</button>
+      <p>Dodaj radio</p>
+      <p><span>Name:</span> <input type="text" id="newName"></p>
+      <p><span>URL:</span> <input type="text" id="newURL"></p>
+      <button onClick='sendURL(this);'>Prześlij</button>
     </div>
 
-  
+<div class="dysk" style="margin-top:2em;background-color: #eee;">
+  <button onClick='dyskZapisz(this);' class="info"  >Zapisz na dysku</button>
+  <input type="file" id="file-input">
+  <!--button onClick='dyskWczytaj(this);' class="info" >Wczytaj z dysku</button-->
+</div>
+
+
       </div>
   </div>
+
+  <script>
+    const dyskZapisz=(t)=>{
+      console.log("dyskZapisz");
+      let name = "tunnelRadio";
+      let jsonTXT = JSON.stringify(streamsDEF,null,"\t"); 
+      let blob = new Blob([jsonTXT], {type: "text/plain;charset=utf-8"});
+      saveAs(blob, name+".json");   
+    }
+
+  function readSingleFile(e) {
+    let file = e.target.files[0];
+    if (!file) {
+      return;
+    }
+    let reader = new FileReader();
+    reader.onload = function(e) {
+      let contents = e.target.result;
+      if (contents){
+        console.log(contents);
+        streamsDEF = JSON.parse(contents);
+        wpiszStacje();
+      }
+      
+    };
+    reader.readAsText(file);
+  }
+
+
+
+    document.getElementById('file-input').addEventListener('change', readSingleFile, false);
+
+
+    /*const dyskWczytaj=(t)=>{
+      console.log("dyskWczytaj")
+    }*/
+    
+ 
+
+
+
+     // szukaj
+    //https://de1.api.radio-browser.info/json/stations/byname/357
+  
+  </script>
   </body>
   </html>
