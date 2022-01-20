@@ -7,8 +7,8 @@
   <meta name="mobile-web-app-capable" content="yes"> 
   <meta name="theme-color" content="#800">
   <link rel="manifest" href="./radio.web.json">
-  <script src="./js/FileSaver.min.js"></script>
-
+  <!--script src="https://znakzorro.github.io/radioTunel/public/js/FileSaver.min.js"></script-->
+  
 <link rel="shortcut icon" type="image/svg+xml" size="any" href="radio.svg"> 
   
   <style>
@@ -20,7 +20,7 @@
       padding: 0;
       margin: 0;  
     }
-    div {margin:0.25em 0;}
+    div {margin:0.15em 0;padding: 0.15em;}
   .wrap {
       z-index: 2;
       margin: auto;
@@ -78,6 +78,7 @@
     div.add p {margin-bottom: 0.5em;}
     div.add span {display: inline-block;min-width:4em;}
     div.add input {width: calc(99% - 5em);font-size: 1rem;}
+    input[type="file" i] {font-size: 1rem;}
   </style>
   
   <script>
@@ -102,7 +103,7 @@
   //{"a":"0", "n": "Szczecin Plus","s":"http://waw01-01.ic.smcdn.pl:8000/4260-1.aac.m3u"},
   //{"a":"0", "n": "Szczecin Eska","s":"http://waw01-01.ic.smcdn.pl:8000/2260-1.aac.m3u"},
   ];
-  //console.log(streamsDEF);
+  console.log(streamsDEF);
     
   let urlDEF = "/";  
   let urlObj = new URL(window.location.href);
@@ -129,6 +130,8 @@
   }
   
   const radioSlij=(el)=>{
+    console.log("#radioSlij");
+    console.log(el);
       removeActive("div.radia button");
       el.target.classList.add("active");
       let data = el.target.dataset;
@@ -176,7 +179,7 @@
   }
 
   const UsunAtualna=()=>{
-    if (confirm("Usunąć stację") == true) {
+    if (confirm("Usunąć aktywną stację") == true) {
       console.log(streamsDEF);
       let active = document.querySelector("div.radia button.active");
       if (active){
@@ -193,6 +196,7 @@
   }
 
   const wpiszStacje=()=>{  
+    console.log("#wpiszStacje");
     console.log(streamsDEF,streamsDEF.length)
     if (!streamsDEF) {alert("Brak stacji"); return;}
     let html = "";
@@ -201,7 +205,7 @@
       });
       document.querySelector("div.radia").innerHTML = html;
       document.querySelectorAll("div.radia button").forEach((e)=>e.addEventListener('click', radioSlij, false)); 
-      document.querySelector("div.radia").innerHTML += '<button class="warn" onClick="UsunAtualna()">Usuń aktualną</button>';
+      //document.querySelector("div.radia").innerHTML += '<button class="warn" onClick="UsunAtualna()">Usuń aktualną</button>';
   }
 
   document.addEventListener("DOMContentLoaded",function(){
@@ -262,9 +266,9 @@
               <span id="vol">0</span>  
           <button onClick='radioFETCH("v=p");refreshInfo(2);' class="succ">Vol ++</button> 
           <hr> 
-          <p><span id="name">Radio</span> <small><span id="stream"></span></small></p> 
+          <p><span id="name">Stacje</span> <small><span id="stream"></span></small></p> 
           <div class="radia"></div>
-          <!--div><button class="warn" onClick="UsunAtualna()">Usuń aktualną</button></div-->
+          <div><button class="warn" onClick="UsunAtualna()">Usuń aktywną</button></div>
         
     <div id="numery" class="st">
           <button onclick='radioFETCH("s=0");'>1</button>
@@ -305,8 +309,9 @@
     </div>
 
 <div class="dysk" style="margin-top:2em;background-color: #eee;">
-  <button onClick='dyskZapisz(this);' class="info"  >Zapisz na dysku</button>
-  <input type="file" id="file-input">
+  <p><button onClick='dyskZapisz(this);' class="info"  >Zapisz na dysku</button></p>
+  <br />
+<p>Wczytaj: <input type="file" id="file-input"></p>
   <!--button onClick='dyskWczytaj(this);' class="info" >Wczytaj z dysku</button-->
 </div>
 
@@ -315,6 +320,7 @@
   </div>
 
   <script>
+    
     const dyskZapisz=(t)=>{
       console.log("dyskZapisz");
       let name = "tunnelRadio";
@@ -323,7 +329,7 @@
       saveAs(blob, name+".json");   
     }
 
-  function readSingleFile(e) {
+  const readSingleFile=(e)=>{
     let file = e.target.files[0];
     if (!file) {
       return;
@@ -343,7 +349,7 @@
 
 
 
-    document.getElementById('file-input').addEventListener('change', readSingleFile, false);
+    //document.getElementById('file-input').addEventListener('change', readSingleFile, false);
 
 
     /*const dyskWczytaj=(t)=>{
@@ -358,5 +364,7 @@
     //https://de1.api.radio-browser.info/json/stations/byname/357
   
   </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js" integrity="sha512-csNcFYJniKjJxRWRV1R7fvnXrycHP6qDR21mgz1ZP55xY5d+aHLfo9/FcGDQLfn2IfngbAHd8LdfsagcCqgTcQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
   </body>
   </html>
