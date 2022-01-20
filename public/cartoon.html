@@ -1,7 +1,7 @@
 <html lang="pl">
 <head>
   <meta charset="utf-8">
-  <title>7-cTunnel</title>
+  <title>1-cTunnel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="HandheldFriendly" content="true">
   <meta name="mobile-web-app-capable" content="yes"> 
@@ -76,13 +76,14 @@
       background: #f4f4f4;
       margin: 0.5em auto;  
     }
-    div.eq button {font-size:0.85em;padding: 0.65em;background:#842;}
+    div.sm button {font-size:0.75em;padding: 0.65em 0.5em;background:#842;}
 
-    div.add {background-color: whitesmoke; margin-top: 0.5em;}
+    div.bg {background-color: whitesmoke; margin-top: 0.5em;}
+    div.add {}
     div.add p {margin-bottom: 0.5em;}
     div.add span {display: inline-block;min-width:4em;}
-    div.add input {width: calc(99% - 5em);font-size: 1rem;}
-    input[type="file" i] {font-size: 1rem;}
+    div.add input {width: calc(99% - 5em);font-size: 1em;}
+    input[type="file" i] {font-size: 1em;}
   </style>
 
 <style>
@@ -150,9 +151,21 @@
     $("#vol").textContent  = arr[1] || "0";
     $("#rsid").textContent = arr[2] || "-0";
     let eq = arr[5] || "0";
-    //console.log($$(".tone button")[parseInt(eq)]);
+    let host = arr[7] || null;
+    
     removeActive("div.tone button")
     $$(".tone button")[parseInt(eq)].classList.add("active");
+    if (host){
+      console.log("host=",host);
+      // find host in streamsDEF
+      streamsDEF.forEach((a,nr)=>{
+        if (a.s===host){
+            console.log(nr)
+            removeActive("div.radia button")
+            $("#st"+nr).classList.add("active")
+        }
+      });
+    }    
   }
 
   const removeActive=(dom)=>{
@@ -231,7 +244,7 @@
     if (!streamsDEF) {alert("Brak stacji"); return;}
     let html = "";
       streamsDEF.forEach((s,i)=>{
-        if (s) html += '<button data-st="'+i+'" data-n="'+s.n+'" data-a="'+s.a+'" data-stream="'+s.s+'" class="info">'+s.n+'</button>';
+        if (s) html += '<button id="st'+i+'" data-st="'+i+'" data-n="'+s.n+'" data-a="'+s.a+'" data-stream="'+s.s+'" class="info">'+s.n+'</button>';
       });
       document.querySelector("div.radia").innerHTML = html;
       document.querySelectorAll("div.radia button").forEach((e)=>e.addEventListener('click', radioSlij, false)); 
@@ -305,13 +318,14 @@
         <div class="button">Więcej</div>
       </label>
       <input type="checkbox" id="state" hidden>
-      <div class="content">      
+      <div class="content">   
+
           <div id="numery" class="st">
-                <button onclick='radioFETCH("s=0");'>1</button>
-                <button onclick='radioFETCH("s=1");'>2</button>
-                <button onclick='radioFETCH("s=2");'>3</button>
-                <button onclick='radioFETCH("s=3");'>4</button>
-                <button onclick='radioFETCH("s=4");'>5</button>
+            <button onclick='radioFETCH("s=0");'>1</button>
+            <button onclick='radioFETCH("s=1");'>2</button>
+            <button onclick='radioFETCH("s=2");'>3</button>
+            <button onclick='radioFETCH("s=3");'>4</button>
+            <button onclick='radioFETCH("s=4");'>5</button>
           </div>               
           <div class="admi">
               <button onclick='zapiszDane();' class="warn">Zapisz</button>
@@ -319,7 +333,7 @@
               <button onClick='radioFETCH("r=1");'  class="warn">Replay</button>
           </div> 
             
-          <div class="eq tone">
+          <div class="sm eq tone">
               <button  data-tone="0" onClick='setTone(this);'>Mowa</button>
               <button  data-tone="1" onClick='setTone(this);'>Muzyka</button>
               <button  data-tone="2" onClick='setTone(this);'>Jazz</button>
@@ -327,7 +341,7 @@
               <button  data-tone="4" onClick='setTone(this);'>Flat</button>
           </div>
 
-          <div class="eq sleep">
+          <div class="sm sleep">
               <p>Wyłącz za:</p>
               <button data-time="15"  onClick='goSleep(this);'>15m</button>
               <button data-time="60"  onClick='goSleep(this);'>1h</button>
@@ -335,18 +349,21 @@
               <button data-time="240" onClick='goSleep(this);'>4h</button>
               <button data-time="480" onClick='goSleep(this);'>8h</button>
           </div>    
-          <div><button class="warn" onClick="UsunAtualna()">Usuń aktywną</button></div>    
-          <div class="add">
+              
+          <div class="add bg">
               <p>Dodaj radio</p>
               <p><span>Name:</span> <input type="text" id="newName"></p>
               <p><span>URL:</span> <input type="text" id="newURL"></p>
-              <button onClick='sendURL(this);'>Prześlij</button>
+              <p>
+                <button onClick='sendURL(this);'>Dodaj</button>
+                <button class="warn" onClick="UsunAtualna()" style="float:right">Usuń aktywną</button>
+              </p>
           </div>
 
-          <div class="dysk" style="margin-top:2em;background-color: #eee;">
+          <div class="dysk bg" style="margin-top:2em;>
               <p><button onClick='dyskZapisz(this);' class="info"  >Zapisz na dysku</button></p>
               <br />
-              <p>Wczytaj: <input type="file" id="file-input"></p>
+              <p>Wczytaj z dysku: <input type="file" id="file-input"></p>
           </div>
 
       </div><!--panel-->
