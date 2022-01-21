@@ -8,6 +8,8 @@
   <meta name="theme-color" content="#800">
   <link rel="manifest" href="./radio.web.json">
   <!--script src="https://znakzorro.github.io/radioTunel/public/js/FileSaver.min.js"></script-->
+  <!--script src="https://cdn.jsdelivr.net/npm/umbrellajs"></script-->
+  
   
 <link rel="shortcut icon" type="image/svg+xml" size="any" href="radio.svg"> 
   
@@ -24,23 +26,23 @@
   .wrap {
       z-index: 2;
       margin: auto;
-      padding: 0.25em;
+      padding: 0.35rem;
       max-width: 800px;
   }  
   .col {
       grid-template-columns: repeat(auto-fit,minmax(120px,1fr));
   }   
   button {
-    padding: 0.7em;
+    padding: 0.75em;
     border: 1px solid #ddd;
     background-color: #50bfff;
     color: #fff;
     margin:0.2em;
-    border-radius: 0.85em;
+    border-radius: 0.8em;
     font-size: 12pt; 
     font-family: "Verdana";
     cursor: pointer;
-    min-width: 3em;
+    min-width: 4em;
   }
   button.succ {
     background-color: #13ce66;
@@ -254,7 +256,7 @@
       });
       document.querySelector("div.radia").innerHTML = html;
       document.querySelectorAll("div.radia button").forEach((e)=>e.addEventListener('click', radioSlij, false)); 
-      //document.querySelector("div.radia").innerHTML += '<button class="warn" onClick="UsunAtualna()">Usuń aktualną</button>';
+      
   }
 
   document.addEventListener("DOMContentLoaded",function(){
@@ -356,6 +358,7 @@
               <button onclick='zapiszDane();' class="warn">Zapisz</button>
               <button onclick='radioFETCH("r=0");' class="warn">Reboot</button>
               <button onClick='radioFETCH("r=1");'  class="warn">Replay</button>
+              <button class="warn" onClick="UsunAtualna()" style="float:right">Usuń stację</button>
           </div> 
             
 
@@ -368,7 +371,7 @@
               <p><span>URL:</span> <input type="text" id="newURL"></p>
               <p>
                 <button onClick='sendURL(this);'>Dodaj</button>
-                <button class="warn" onClick="UsunAtualna()" style="float:right">Usuń aktywną</button>
+                
               </p>
           </div>
 
