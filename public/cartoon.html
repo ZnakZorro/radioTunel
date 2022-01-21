@@ -21,11 +21,12 @@
     font-size: 14pt;
     padding: 0;
     margin: 0;  
+    position: relative;
   }
-  p {margin:0;}
-  small {font-size:0.6em;}  
-  div {display:inline-block; margin:0.15em 0;padding: 0.15em;width: 100%;}
+  #app {position: relative; width: 100%;display: grid;}
+  
   .wrap {
+    margin:auto;
     z-index: 2;
     margin: auto;
     padding: 0.35rem;
@@ -33,7 +34,10 @@
   }  
   .col {
       grid-template-columns: repeat(auto-fit,minmax(120px,1fr));
-  }   
+  }
+  p {margin:0;}
+  small {font-size:0.6em;}  
+  div {display:inline-block; margin:0.15em 0;padding: 0.15em;width: 100%;}
   button {
     padding: 0.75em;
     border: 1px;
@@ -348,7 +352,8 @@ input[type="file"] {
 <body>
   
   
-  <div id="app" class="wrap">
+  <div id="app">
+    <div class="wrap">
       <p><span id="title">cartoonTunnel</span> [<span id="rsid"></span>dB]</p>  
       <div id="info" class="shadow"></div> 
       <div class="col">
@@ -422,7 +427,7 @@ input[type="file"] {
       </div><!--panel-->
       
     </div><!--wrap-->
-  
+  </div><!--app-->
   <script>
     
   const dyskZapisz=(t)=>{
