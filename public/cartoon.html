@@ -65,7 +65,8 @@
       min-height: 1.75em;
       background: #f4f4f4;
       margin: 0.5em auto; 
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); 
+      padding: 0.2em;
+      /*box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); */
     }
   div.sm button {font-size:0.75em;margin:0.2em 0.1em; padding: 0.65em 0.25em;background:#842;}
   div.admi button {background-color: orange;color: #000; min-width:7.1em;}
@@ -146,6 +147,10 @@ input[type="file"] {
     padding: 6px 12px;
     cursor: pointer;
 }
+
+
+.shadow {box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;}
+
 </style>
 
   <script>
@@ -345,7 +350,7 @@ input[type="file"] {
   
   <div id="app" class="wrap">
       <p><span id="title">cartoonTunnel</span> [<span id="rsid"></span>dB]</p>  
-      <div id="info"></div> 
+      <div id="info" class="shadow"></div> 
       <div class="col">
           <button onClick='refreshInfo(0);' class="navy">Info()</button> 
           <button onClick='radioFETCH("v=m");refreshInfo(2);'class="gitt">Vol --</button> 
@@ -396,7 +401,7 @@ input[type="file"] {
               <button class="warn" onClick="UsunAtualna()">Usuń stację</button>
           </div> 
    
-          <div class="add bg">
+          <div class="add bg shadow">
               <p>Dodaj stację</p>
               <p><span>Name:</span> <input type="text" id="newName"></p>
               <p><span>URL:</span> <input type="text" id="newURL"></p>
@@ -406,7 +411,7 @@ input[type="file"] {
               </p>
           </div>
 
-          <div class="dysk bg" style="margin-top:2em;">
+          <div class="dysk bg shadow" style="margin-top:2em;">
               <p style="text-align: center;"><button onClick='dyskZapisz(this);' class="info" style="width:12em; padding: 0.75em;" >Zapisz na dysku</button></p>
               <p class="fileUpload">
                 <input type="file" class="upload" id="file-input"/>
@@ -415,8 +420,8 @@ input[type="file"] {
           </div>
 
       </div><!--panel-->
-
-  </div><!--wrap-->
+      
+    </div><!--wrap-->
   
   <script>
     
