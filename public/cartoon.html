@@ -94,51 +94,7 @@
 </style> 
 
 <style>
-  /*
-.fileUpload {
-	background: #00bcbe;
-	-webkit-border-radius: 15px;
-	-moz-border-radius: 15px;
-	border-radius: 15px;
-	color: #fff;
-	margin: 0.2em;
-	overflow: hidden;
-	padding: 0.5em;
-	position: relative;
-	text-align: center;
-	width: 12em;
-   cursor: pointer;
-}
-.fileUpload:hover, .fileUpload:active, .fileUpload:focus {
-	background: #00a2a4;
-  cursor: pointer;
-}
-.fileUpload input.upload {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 0;
-    padding: 0;
-
-    cursor: pointer;
-    opacity: 0;
-    filter: alpha(opacity=0);
-    
-  cursor: pointer;
-}
-
-input[type="file"] {
-    position: fixed;
-    right: 100%;
-    bottom: 100%;
-}
-.custom-file-upload {
-    border: 1px solid #ccc;
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
-}  
-*/
+ 
 .fileUpload {
 	background: #00bcbe;
 	-webkit-border-radius: 15px;
@@ -254,8 +210,8 @@ input[type="file"] {
   }
   
   const radioSlij=(el)=>{
-    console.log("#radioSlij");
-    console.log(el);
+    //console.log("#radioSlij");
+    //console.log(el);
       removeActive("div.radia button");
       el.target.classList.add("active");
       let data = el.target.dataset;
@@ -304,7 +260,7 @@ input[type="file"] {
 
   const UsunAtualna=()=>{
     if (confirm("Usunąć aktywną stację") == true) {
-      console.log(streamsDEF);
+      //console.log(streamsDEF);
       let active = document.querySelector("div.radia button.active");
       if (active){
           let nrst = active.dataset.st;
@@ -314,14 +270,14 @@ input[type="file"] {
           zapiszStacje();
           wpiszStacje();
       }
-      console.log(active);
+      //console.log(active);
     } 
     
   }
 
   const wpiszStacje=()=>{  
-      console.log("#wpiszStacje");
-      console.log(streamsDEF,streamsDEF.length)
+      //console.log("#wpiszStacje");
+      //console.log(streamsDEF,streamsDEF.length)
       if (!streamsDEF) {alert("Brak stacji"); return;}
       let html = "";
       streamsDEF.forEach((s,i)=>{
@@ -334,7 +290,7 @@ input[type="file"] {
 
   document.addEventListener("DOMContentLoaded",function(){
       let odczyt=odczytajStacje();
-      console.log(odczyt)
+      //console.log(odczyt)
       if(odczyt) streamsDEF = odczyt;
       wpiszStacje();
          
@@ -346,7 +302,7 @@ input[type="file"] {
   const sendURL=(t)=>{
      let newName = $("#newName").value;
      let newURL = $("#newURL").value;
-    console.log(newName,newURL);
+    //console.log(newName,newURL);
     if(newName && newURL){
         streamsDEF.push({"a":"0", "n": newName,"s":newURL});
         $("#name").textContent = newName;
@@ -358,13 +314,13 @@ input[type="file"] {
   }
   
   const setTone=(t)=>{
-      console.log(t.dataset.tone);
+      //console.log(t.dataset.tone);
       radioFETCH("q="+t.dataset.tone);
       removeActive("div.tone button")
       t.classList.add("active");
   }
   const goSleep=(t)=>{
-      console.log(t.dataset.time);
+      //console.log(t.dataset.time);
       radioFETCH("y="+t.dataset.time);
       removeActive("div.sleep button")
       t.classList.add("active");
@@ -460,7 +416,7 @@ input[type="file"] {
   <script>
     
   const dyskZapisz=(t)=>{
-    console.log("dyskZapisz");
+    //console.log("dyskZapisz");
     let name = "tunnelRadio";
     let jsonTXT = JSON.stringify(streamsDEF,null,"\t"); 
     let blob = new Blob([jsonTXT], {type: "text/plain;charset=utf-8"});
@@ -468,8 +424,8 @@ input[type="file"] {
   }
 
   const readSingleFile=(e)=>{
-    console.log(e)
-    console.log(e.target.files)
+    //console.log(e)
+    //console.log(e.target.files)
     let file = e.target.files[0];
     if (!file) {
       return;
@@ -478,9 +434,10 @@ input[type="file"] {
     reader.onload = function(e) {
       let contents = e.target.result;
       if (contents){
-        console.log(contents);
+        //console.log(contents);
         streamsDEF = JSON.parse(contents);
         wpiszStacje();
+        zapiszStacje();
       }
       
     };
