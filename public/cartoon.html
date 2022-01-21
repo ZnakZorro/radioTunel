@@ -13,21 +13,23 @@
   
 <link rel="shortcut icon" type="image/svg+xml" size="any" href="radio.svg"> 
   
-  <style>
+<style>
    
   *,*::before,*::after {box-sizing: border-box;} 
-    body {
-      font-family: Verdana;
-      font-size: 14pt;
-      padding: 0;
-      margin: 0;  
-    }
-    div {margin:0.15em 0;padding: 0.15em;}
+  body {
+    font-family: Verdana;
+    font-size: 14pt;
+    padding: 0;
+    margin: 0;  
+  }
+  p {margin:0;}
+  small {font-size:0.6em;}  
+  div {display:inline-block; margin:0.15em 0;padding: 0.15em;}
   .wrap {
-      z-index: 2;
-      margin: auto;
-      padding: 0.35rem;
-      max-width: 800px;
+    z-index: 2;
+    margin: auto;
+    padding: 0.35rem;
+    max-width: 800px;
   }  
   .col {
       grid-template-columns: repeat(auto-fit,minmax(120px,1fr));
@@ -42,20 +44,13 @@
     font-size: 12pt; 
     font-family: "Verdana";
     cursor: pointer;
-    min-width: 4em;
+    min-width: 4.5em;
   }
-  button.succ {
-    background-color: #13ce66;
-    color: #fff;
-  }
-  button.warn {
-    background-color: orange;
-    color: #000;
-  }
-  button.navy {
-    background-color: darkviolet;
-    color: white;
-  }
+  button.gitt   {background-color: #2da44e;color: #fff;}  
+  button.active {background-color: red!important;} 
+  button.succ   {background-color: #13ce66;color: #fff;}
+  button.warn   {background-color: orange;color: #000;}
+  button.navy   {background-color: darkviolet;color: white;}
   button.info {
     background-color: #369;
     color: #fff;
@@ -63,54 +58,38 @@
     font-size: 1.0em;
     padding: 0.5em;
   }
-    button.gitt {
-    background-color: #2da44e;
-    color: #fff;
-  }
-    
-  button.active{
-    background-color:red!important;
-  }    
-  p {margin:0;}
-  small {font-size:0.6em;}
   #info {
       min-height: 1.5em;
       background: #f4f4f4;
       margin: 0.5em auto;  
     }
-    div.sm button {font-size:0.75em;padding: 0.65em 0.5em;background:#842;}
-
-    div.bg {background-color: whitesmoke; margin-top: 0.5em;}
-    div.add {}
-    div.add p {margin-bottom: 0.5em;}
-    div.add span {display: inline-block;min-width:4em;}
-    div.add input {width: calc(99% - 5em);font-size: 1em;}
-    input[type="file" i] {font-size: 1em;}
-  </style>
+  div.sm button {font-size:0.75em;margin:0.2em 0.1em; padding: 0.65em 0.25em;background:#842;}
+  div.admi button {background-color: orange;color: #000; min-width:7em;}
+  div.bg {background-color: whitesmoke; margin-top: 0.5em;}
+  div.add {}
+  div.add p {margin-bottom: 0.5em;}
+  div.add span {display: inline-block;min-width:4em;}
+  div.add input {width: calc(99% - 5em);font-size: 1em;}
+  input[type="file" i] {font-size: 1em;}
+</style>
 
 <style>
-    .button {
-        background: #ccffff;
-        cursor: pointer;        
-        padding: 0.5em;
-        width:100%;
-    }
-    .button:hover {
-        opacity: 0.7;
-    }
-    .content {
-        background: #ffffcc;
-        padding: 0 0.5em;
-        width: 100%;
-        overflow: hidden;
-        max-height: 0;
-        transition: all 1s ease-in-out;
-      
-    }
-    #state:checked ~ .content {  
-        max-height: 100vh;
-        padding: 0.5em;
-    }
+  .button {
+    background: #ccffff;
+    cursor: pointer;
+    width:100%;
+    padding: 0.5em;
+  }
+  .button:hover {opacity: 0.7;}
+  .content {
+    background: #ffffcc;
+    padding: 0 0.5em;
+    width: 100%;
+    overflow: hidden;
+    max-height: 0;
+    transition: all 1s ease-in-out;  
+  }
+  #state:checked ~ .content { max-height: 100vh;}
 </style> 
 
 
@@ -247,10 +226,10 @@
   }
 
   const wpiszStacje=()=>{  
-    console.log("#wpiszStacje");
-    console.log(streamsDEF,streamsDEF.length)
-    if (!streamsDEF) {alert("Brak stacji"); return;}
-    let html = "";
+      console.log("#wpiszStacje");
+      console.log(streamsDEF,streamsDEF.length)
+      if (!streamsDEF) {alert("Brak stacji"); return;}
+      let html = "";
       streamsDEF.forEach((s,i)=>{
         if (s) html += '<button id="st'+i+'" data-st="'+i+'" data-n="'+s.n+'" data-a="'+s.a+'" data-stream="'+s.s+'" class="info">'+s.n+'</button>';
       });
@@ -260,15 +239,16 @@
   }
 
   document.addEventListener("DOMContentLoaded",function(){
-    let odczyt=odczytajStacje();
-    console.log(odczyt)
-    if(odczyt) streamsDEF = odczyt;
-    wpiszStacje();
+      let odczyt=odczytajStacje();
+      console.log(odczyt)
+      if(odczyt) streamsDEF = odczyt;
+      wpiszStacje();
          
       refreshInfo(1);
       setInterval(()=>{radioFETCH("n=0");},15000);
       $("#title").textContent = document.title;
   });
+
   const sendURL=(t)=>{
      let newName = $("#newName").value;
      let newURL = $("#newURL").value;
@@ -284,16 +264,16 @@
   }
   
   const setTone=(t)=>{
-    console.log(t.dataset.tone);
-    radioFETCH("q="+t.dataset.tone);
-    removeActive("div.tone button")
-    t.classList.add("active");
+      console.log(t.dataset.tone);
+      radioFETCH("q="+t.dataset.tone);
+      removeActive("div.tone button")
+      t.classList.add("active");
   }
   const goSleep=(t)=>{
-    console.log(t.dataset.time);
-    radioFETCH("y="+t.dataset.time);
-    removeActive("div.sleep button")
-    t.classList.add("active");
+      console.log(t.dataset.time);
+      radioFETCH("y="+t.dataset.time);
+      removeActive("div.sleep button")
+      t.classList.add("active");
   }
   
   const zapiszDane=()=>{
@@ -312,19 +292,18 @@
       <p><span id="title">cartoonTunnel</span> [<span id="rsid"></span>dB]</p>  
       <div id="info"></div> 
       <div class="col">
-            <button onClick='refreshInfo(0);' class="navy">Info()</button> 
-            <button onClick='radioFETCH("v=m");refreshInfo(2);'class="gitt">Vol --</button> 
-                <span id="vol">0</span>  
-            <button onClick='radioFETCH("v=p");refreshInfo(2);' class="succ">Vol ++</button> 
-            <hr> 
-            <p><span id="name">Stacje</span> <small><span id="stream"></span></small></p> 
-            <div class="radia"></div>
-            
+          <button onClick='refreshInfo(0);' class="navy">Info()</button> 
+          <button onClick='radioFETCH("v=m");refreshInfo(2);'class="gitt">Vol --</button> 
+              <span id="vol">0</span>  
+          <button onClick='radioFETCH("v=p");refreshInfo(2);' class="succ">Vol ++</button> 
+          <hr> 
+          <p><span id="name">Stacje</span> <small><span id="stream"></span></small></p> 
+          <div class="radia"></div>      
       </div> 
 
       
       <label for="state">
-        <div class="button">Więcej</div>
+          <div class="button">Więcej</div>
       </label>
       <input type="checkbox" id="state" hidden>
       <div class="content">   
@@ -358,15 +337,11 @@
               <button onclick='zapiszDane();' class="warn">Zapisz</button>
               <button onclick='radioFETCH("r=0");' class="warn">Reboot</button>
               <button onClick='radioFETCH("r=1");'  class="warn">Replay</button>
-              <button class="warn" onClick="UsunAtualna()" style="float:right">Usuń stację</button>
+              <button class="warn" onClick="UsunAtualna()">Usuń stację</button>
           </div> 
-            
-
-
    
-              
           <div class="add bg">
-              <p>Dodaj radio</p>
+              <p>Dodaj stację</p>
               <p><span>Name:</span> <input type="text" id="newName"></p>
               <p><span>URL:</span> <input type="text" id="newURL"></p>
               <p>
@@ -384,21 +359,16 @@
       </div><!--panel-->
 
   </div><!--wrap-->
-      
   
-
-
-       
-
   <script>
     
-    const dyskZapisz=(t)=>{
-      console.log("dyskZapisz");
-      let name = "tunnelRadio";
-      let jsonTXT = JSON.stringify(streamsDEF,null,"\t"); 
-      let blob = new Blob([jsonTXT], {type: "text/plain;charset=utf-8"});
-      saveAs(blob, name+".json");   
-    }
+  const dyskZapisz=(t)=>{
+    console.log("dyskZapisz");
+    let name = "tunnelRadio";
+    let jsonTXT = JSON.stringify(streamsDEF,null,"\t"); 
+    let blob = new Blob([jsonTXT], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, name+".json");   
+  }
 
   const readSingleFile=(e)=>{
     console.log(e)
@@ -420,29 +390,6 @@
     reader.readAsText(file);
   }
   document.getElementById('file-input').addEventListener('change', readSingleFile, false);
-/*
-  let wiecej = document.getElementById("wiecej");
-  wiecej.addEventListener("click", function() {
-    //console.log(this)
-    this.classList.toggle("active");
-    let panel = this.nextElementSibling;
-    if (panel.style.display === "block") {
-      panel.style.display = "none";
-    } else {
-      panel.style.display = "block";
-    }
-  });
-*/
-    //
-
-
-    /*const dyskWczytaj=(t)=>{
-      console.log("dyskWczytaj")
-    }*/
-    
- 
-
-
 
      // szukaj
     //https://de1.api.radio-browser.info/json/stations/byname/357
