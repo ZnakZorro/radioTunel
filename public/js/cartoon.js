@@ -173,9 +173,19 @@
     }
     
     const zapiszDane=()=>{
-        let json = JSON.stringify(streamsDEF);
-        radioFETCH("z="+json);
-        refreshInfo(3);
+        //let json = JSON.stringify(streamsDEF);
+        //radioFETCH("z="+json);
+        //refreshInfo(3);
+        let EOL="\r\n";
+        let txt="";
+        streamsDEF.forEach((v,i)=>{
+          if (i>5) return;
+          txt += v.n+EOL;
+          txt += v.s+EOL;
+        })
+      console.log(txt)
+      radioFETCH("z="+txt);
+      refreshInfo(3);
     }
     
     const dyskZapisz=(t)=>{
