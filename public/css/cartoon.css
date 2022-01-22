@@ -1,0 +1,139 @@
+  
+
+   
+    *,*::before,*::after {box-sizing: border-box;} 
+    body {
+      font-family: Verdana;
+      font-size: 14pt;
+      padding: 0;
+      margin: 0;  
+      position: relative;
+    }
+    #app {position: relative; width: 100%;display: grid;}
+    
+    .wrap {
+      margin:auto;
+      z-index: 2;
+      margin: auto;
+      padding: 0.35rem;
+      max-width: 800px;
+    }  
+    .col {
+        grid-template-columns: repeat(auto-fit,minmax(120px,1fr));
+    }
+    p {margin:0;}
+    small {font-size:0.6em;}  
+    div {display:inline-block; margin:0.15em 0;padding: 0.15em;width: 100%;}
+    button {
+      padding: 0.75em;
+      border: 1px;
+      background-color: #00bcbe;
+      
+      color: #fff;
+      margin:0.2em;
+      border-radius: 0.8em;
+      font-size: 12pt; 
+      font-family: "Verdana";
+      cursor: pointer;
+      min-width: 4.75em;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+     
+    }
+    button.gitt   {background-color: #2da44e;color: #fff;}  
+    button.active {background-color: red!important;} 
+    button.succ   {background-color: #13ce66;color: #fff;}
+    button.warn   {background-color: orange;color: #000;}
+    button.navy   {background-color: darkviolet;color: white;}
+    button.info {
+      background-color: #369;
+      color: #fff;
+      min-width: 9em;
+      font-size: 1.0em;
+      padding: 0.5em;
+    }
+    #info {
+        min-height: 1.75em;
+        background: #f4f4f4;
+        margin: 0.5em auto; 
+        padding: 0.2em;
+        /*box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); */
+      }
+    div.sm button {font-size:0.75em;margin:0.2em 0.1em; padding: 0.65em 0.25em;background:#842;}
+    div.admi button {background-color: orange;color: #000; min-width:7.1em;}
+    div.bg {background-color: whitesmoke; margin-top: 0.5em;}
+    div.add {}
+    div.add p {margin-bottom: 0.5em;}
+    div.add span {display: inline-block;min-width:4em;}
+    div.add input {width: calc(99% - 5em);font-size: 1em;}
+    input[type="file"] {font-size: 1em; background-color: thistle;}
+
+    .button {
+      background: #ccffff;
+      cursor: pointer;
+      width:100%;
+      padding: 0.5em;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .button:hover {opacity: 0.7;}
+    .acordion {
+      background: #ffffcc;
+      padding: 0 0.5em;
+      width: 100%;
+      overflow: hidden;
+      max-height: 0;
+      transition: all 1s ease-in-out;
+      padding:0;
+    }
+    #state:checked ~ .acordion { max-height: 120vh;}
+
+   
+  .fileUpload {
+      background: #00bcbe;
+      -webkit-border-radius: 15px;
+      -moz-border-radius: 15px;
+      border-radius: 15px;
+      color: #fff;
+      
+      margin: 1.25em auto;
+      overflow: hidden;
+      padding: 0.75em;
+      position: relative;
+      text-align: center;
+      width: 220px;
+     cursor: pointer;
+     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  .fileUpload:hover, .fileUpload:active, .fileUpload:focus {
+      background: #00a2a4;
+    cursor: pointer;
+  }
+  .fileUpload input.upload {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: 0;
+      padding: 0;
+      
+      cursor: pointer;
+      opacity: 0;
+      filter: alpha(opacity=0);
+      width: 248px;
+      height: 46px;
+    cursor: pointer;
+  }
+  
+  input[type="file"] {
+      position: fixed;
+      right: 100%;
+      bottom: 100%;
+  }
+  .custom-file-upload {
+      border: 1px solid #ccc;
+      display: inline-block;
+      padding: 6px 12px;
+      cursor: pointer;
+  }
+  
+  
+  .shadow {box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;}
+  

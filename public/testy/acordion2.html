@@ -1,0 +1,36 @@
+<style>
+.button {
+    background: #ccffff;
+    cursor: pointer;
+    font-size: 20pt;
+    padding: 16px;
+    width: 500px;
+}
+.button:hover {
+    opacity: 0.7;
+}
+.content {
+    background: #ffffcc;
+    padding: 0 16px;
+    width: 500px;
+    overflow: hidden;
+    max-height: 0;
+    transition: all 1s ease-in-out;
+  font-size: 18pt;
+}
+#state:checked ~ .content {  
+    max-height: 100px;
+    padding: 16px;
+}
+</style>    
+
+<label for="state">
+    <div class="button">Button</div>
+</label>
+<input type="checkbox" id="state" hidden>
+<div class="content">
+    Content<br>
+    Content<br>
+    Content<br>
+    ...
+</div>
