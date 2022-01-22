@@ -96,7 +96,15 @@
         })
         .catch(e => {console.log(e)})
     }
-  
+    const paramFETCH=(param) =>{
+      let u = url+"key?"+param; 
+      fetch(u)
+      .then(checkForError)
+      .then(tx => {
+          opisInfoRadio(tx);  
+      })
+      .catch(e => {console.log(e)})
+  }  
     const odczytajStacje=()=>{
         //console.log("zapiszStacje")
         //console.log(streamsDEF);
@@ -182,6 +190,7 @@
           if (i>5) return;
           txt += v.n+EOL;
           txt += v.s+EOL;
+          paramFETCH("name="+v.n+"&val="+v.s+"&nr="+i);
         })
       console.log(txt)
       radioFETCH("z="+txt);
