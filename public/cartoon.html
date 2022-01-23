@@ -1,7 +1,7 @@
 <html lang="pl">
 <head>
   <meta charset="utf-8">
-  <title>CartoonTunnel-2</title>
+  <title>CartoonTunnel-3</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="HandheldFriendly" content="true">
   <meta name="mobile-web-app-capable" content="yes"> 
@@ -9,7 +9,7 @@
   <link rel="manifest" href="https://znakzorro.github.io/radioTunel/public/radio.web.json">
   
 <link rel="shortcut icon" type="image/svg+xml" size="any" href="https://znakzorro.github.io/radioTunel/public/img/radio.svg"> 
-<link rel="stylesheet" href="https://znakzorro.github.io/radioTunel/public/css/cartoon.css" />
+<!--link rel="stylesheet" href="https://znakzorro.github.io/radioTunel/public/css/cartoon.css" /-->
 <!--link rel="stylesheet" href="./css/cartoon.css" /-->
 
  
@@ -103,8 +103,53 @@
       
     </div><!--wrap-->
   </div><!--app-->
-  
-  <script src="https://znakzorro.github.io/radioTunel/public/js/cartoon.js"></script>
+<script>
+    const handleScript = (e) => {
+          console.log(e.type === "load" ? "ready" : "error");
+          if (e.type === "load"){
+              window.document.dispatchEvent(new Event("DOMContentLoaded", {
+                  bubbles: true,
+                  cancelable: true
+              }));
+          }    
+    };
+    const installScript=(url)=>{
+        let head = document.getElementsByTagName('script')[0]; 
+        skrypt = document.createElement('script'); 
+        skrypt.type = 'text/javascript'; 
+        skrypt.async = !true;
+        skrypt.src=url;
+        head.parentNode.insertBefore(skrypt, head);	
+        skrypt.addEventListener("load", handleScript);
+        skrypt.addEventListener("error", handleScript);
+    }
+    
+    const loadCSS=(url)=>{  
+        let head = document.getElementsByTagName('head')[0]   
+        let style = document.createElement('link') 
+        style.href = url;
+        style.type = 'text/css'
+        style.rel = 'stylesheet'
+        head.append(style);
+    }
+
+    if (location.protocol==="file:") {
+        document.title="Cartoon-file";    
+        let link = document.querySelector("link[rel~='icon']");
+        /*if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            document.getElementsByTagName('head')[0].appendChild(link);
+        }*/
+        link.href = './css/icon/red.ico';
+        installScript("./js/cartoon.js");
+        loadCSS("./css/cartoon.css");
+    } else {
+      installScript("https://znakzorro.github.io/radioTunel/public/js/cartoon.js");
+      loadCSS("https://znakzorro.github.io/radioTunel/public/css/cartoon.css");
+    }
+    </script>	
+  <!--script src="https://znakzorro.github.io/radioTunel/public/js/cartoon.js"></script-->
   <!--script src="./js/cartoon.js"></script-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js" integrity="sha512-csNcFYJniKjJxRWRV1R7fvnXrycHP6qDR21mgz1ZP55xY5d+aHLfo9/FcGDQLfn2IfngbAHd8LdfsagcCqgTcQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
