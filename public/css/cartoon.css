@@ -44,6 +44,7 @@
     button.succ   {background-color: #13ce66;color: #fff;}
     button.warn   {background-color: orange;color: #000;}
     button.navy   {background-color: darkviolet;color: white;}
+    
     button.info {
       background-color: #369;
       color: #fff;
@@ -51,6 +52,7 @@
       font-size: 1.0em;
       padding: 0.5em;
     }
+    button.nr     {background-color: #3cf;color: black;}
     #info {
         min-height: 1.75em;
         background: #f4f4f4;
