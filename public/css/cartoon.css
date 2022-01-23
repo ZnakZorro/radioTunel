@@ -24,6 +24,7 @@
     p {margin:0;}
     small {font-size:0.6em;}  
     div {display:inline-block; margin:0.15em 0;padding: 0.15em;width: 100%;}
+    #sta,#vol {min-width:2em; text-align: center; display: inherit;}
     button {
       padding: 0.75em;
       border: 1px;
