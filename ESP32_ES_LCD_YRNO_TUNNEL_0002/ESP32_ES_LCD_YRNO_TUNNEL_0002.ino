@@ -123,7 +123,7 @@ void pogoda2LCD(){
       clio.println(clio.linieLCD[loopa],1);
       if (loopa==0) {
           
-          clio.println(LCD_Buffer1,0);
+          clio.println(LCD_Buffer1,1);
           //clio.println(LCD_Buffer2,0);
       }
       //if (loopa==1) clio.println(LCD_Buffer1,0);
@@ -184,7 +184,7 @@ void savePreferences(){
          preferences.putUInt("cur_equalizer", cur_equalizer);  
          preferences.putString("hostURL", hostURL);     
          preferences.end();
-         //LCD_Buffer1 = "Vol="+String(cur_volume);
+         LCD_Buffer1 = "Vol="+String(cur_volume) + ", Sta="+String(cur_station);
 }  
   
 void es_volume(int volum){
@@ -314,7 +314,7 @@ void setup()
       LastTimerSLEEP = millis();
       snprintf(extraInfo, 32, hostURL.c_str());
       installServer();
-      LCD_Buffer2 = "Vol="+String(cur_volume) + ", Sta="+String(cur_station);
+      LCD_Buffer1 = "Vol="+String(cur_volume) + ", Sta="+String(cur_station);
 }
 // setup end ----------------------------------------------------------------------------------------------------------------------
 
