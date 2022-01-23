@@ -11,7 +11,7 @@
 
 
 #include "SPI.h"
-#include "SPIFFS.h"
+//#include "SPIFFS.h"
 #include "SD.h"
 #include "FS.h"
 #include "Wire.h"
@@ -46,14 +46,14 @@
 // Amplifier enable
 #define GPIO_PA_EN    19
 
-#define LED_BUILTIN   22
+#define LED_BUILTIN    22
 #define cur_volume_DEF  3
+#define LAST_STATION    5
 
 int start_volume        = 75;  // 0...100
 int cur_volume    = cur_volume_DEF;
 int cur_station   = 1;
-int cur_host      = 0;
-int last_stations = 2;
+
 int cur_equalizer = 0;
 
 
@@ -73,14 +73,16 @@ String LCD_Buffer2;
 
 String jsonBuffer;
 int loopa=0;
-String linia2="";
+//String linia2="";
 char   znakS = (char)223;
 
 
 bool isSD        = false;
 
 String hostURL = "http://stream.rcs.revma.com/ypqt40u0x1zuv";
-char extraInfo[64];// = hostURL;
+String hostNAME = "RNS";
+
+char extraInfo[32];// = hostURL;
 
 char* indexPath = "/radioTunel/public/cartoon.html";
 
@@ -96,7 +98,7 @@ Preferences preferences;
 //----------------------------------------------------------------------------------------------------------------------
 void onScreens(const char *linia1, const char *linia2, int lineNR){
   //clio.drukLCD(linia2);
-  Serial.printf("======================================\n %u :: %s:: %s\n", lineNR,linia1,linia2);
+  Serial.printf("==========================\n %u :: %s:: %s\n", lineNR,linia1,linia2);
 }
 
 String padZero(int nr){
@@ -110,7 +112,7 @@ String padZero(int nr){
 
 void pogoda2LCD(){
     String isRun = audio.isRunning() ? "play":"stop";
-    if (!audio.isRunning()) playCurStation();
+    //if (!audio.isRunning()) playCurStation();
       
       /*Serial.print("\n======================="); 
       for (int n=0;n<7;n++) {
@@ -187,7 +189,7 @@ void es_volume(int volum){
 unsigned long millisTEST = 0;
 
 void audioStop(){
-    Serial.println("AAAAAAAAAAAAAAAAAA"); 
+    Serial.println("#192 audioStop"); 
     es_volume(0);
     audio.setVolume(0);
     audio.stopSong();
@@ -196,13 +198,13 @@ void audioStop(){
 }
 
 void audioStart(){
-    Serial.println("ZZZZZZZZZZZZZZZZZZ"); 
-    Serial.println(millis() - millisTEST); 
+    Serial.println("#201 audioStart"); 
+    //Serial.println(millis() - millisTEST); 
     audio.connecttohost(hostURL.c_str()); 
-    es_volume(cur_volume);
+    es_volume(start_volume);
     audio.setVolume(cur_volume);
-    Serial.println(millis() - millisTEST);
-    Serial.println(audio.isRunning());
+    Serial.print("millis=");Serial.println(millis() - millisTEST);
+    Serial.print("isRun =");Serial.println(audio.isRunning());
 }
 
            
@@ -219,8 +221,13 @@ void setup()
           cur_volume    = preferences.getUInt("cur_volume", cur_volume_DEF);
           cur_equalizer = preferences.getUInt("cur_equalizer", 0);
           hostURL       = preferences.getString("hostURL","http://pl-play.adtonos.com/tok-fm");
-          Serial.println("#234 preferences.hostURL==="); 
+          Serial.println("#224 preferences.hostURL==="); 
           Serial.println(hostURL); 
+          Serial.println(" ===========");
+          String sName0  = preferences.getString("sName0","tok-fm");
+          String sUrl0   = preferences.getString("sUrl0","http://pl-play.adtonos.com/tok-fm");
+          Serial.println(sName0); 
+          Serial.println(sUrl0);
           Serial.println(" ===========");
           preferences.end();
  
@@ -233,6 +240,10 @@ void setup()
 
       if (!SPIFFS.begin(true)) {
         Serial.println("An Error has occurred while mounting SPIFFS");
+      } else{
+        //readDATA();
+        //Serial.println("");
+        //Serial.println("readDATA EOF");
       }
     
     //WiFi.mode(WIFI_OFF);
@@ -284,12 +295,12 @@ void setup()
  
        getYrnoPogoda(); 
       delay(333);
-      listFileFromSPIFFS();
+      //listFileFromSPIFFS();
       //audio.connecttohost(hostURL.c_str());
       //audio.connecttoFS(SPIFFS, "/r.mp3");
       //playCurStation();
       LastTimerSLEEP = millis();
-      snprintf(extraInfo, 64, hostURL.c_str());
+      snprintf(extraInfo, 32, hostURL.c_str());
       installServer();
 }
 // setup end ----------------------------------------------------------------------------------------------------------------------
@@ -334,15 +345,15 @@ void loop()
                                       log_i("free heap=%i", ESP.getFreeHeap());
                                     }
                                     if (odczyt == "-9") {Serial.println("-9x");ESP.restart();}
-                                    if (odczytInt>0 && odczytInt<3) {
+                                    /*if (odczytInt>0 && odczytInt<3) {
                                       Serial.println(odczytInt);
                                       cur_station = odczytInt-1;
                                       playCurStation();
-                                      }
-                                    if (odczyt == "+") {cur_station++;playCurStation();}
-                                    if (odczyt == "-") {cur_station--;playCurStation();}
-                                    if (odczyt == "*") {cur_volume++;setCurVolume();}
-                                    if (odczyt == "/") {cur_volume--;setCurVolume();}
+                                      }*/
+                                    //if (odczyt == "+") {cur_station++;playCurStation();}
+                                    //if (odczyt == "-") {cur_station--;playCurStation();}
+                                    //if (odczyt == "*") {cur_volume++;setCurVolume();}
+                                    //if (odczyt == "/") {cur_volume--;setCurVolume();}
                                     
                                       if (odczyt == "pl") audio.connecttospeech("Dzień dobry. Litwo! Ojczyzno moja! ty jesteś jak zdrowie: Ile cię trzeba cenić, ten tylko się dowie, Kto cię stracił. Dziś piękność twą w całej ozdobie Widzę i opisuję, bo tęsknię po tobie.", "pl");
                                      
@@ -364,27 +375,26 @@ void audio_id3data(const char *info){  //id3 metadata
 }
 void audio_eof_mp3(const char *info){  //end of file
     Serial.print("-----eof_mp3     ");Serial.println(info);
-    playCurStation();
+    //playCurStation();
 }
 void audio_showstation(const char *info){
-  snprintf(extraInfo, 64, info);
-    //Serial.print("station     ");Serial.println(info);
-    onScreens("audio_showstation::",String(info).c_str(),326);
+  snprintf(extraInfo, 32, info);
+    onScreens("audio_showstation::",String(info).c_str(),384);
     //LCD_Buffer1 = String(info).substring(0,16);
     //LCD_Buffer2 = String(info).substring(16,32);
     es_volume(start_volume);
 }
 void audio_showstreaminfo(const char *info){
-  snprintf(extraInfo, 64, info);
+  snprintf(extraInfo, 32, info);
     //Serial.print("streaminfo  ");Serial.println(info);
-    onScreens("streaminfo::",String(info).c_str(),187);
+    onScreens("streaminfo::",String(info).c_str(),392);
     //LCD_Buffer1 = String(info).substring(0,16);
     //LCD_Buffer2 = String(info).substring(16,32);
 }
 void audio_showstreamtitle(const char *info){
-  snprintf(extraInfo, 64, info);
+  snprintf(extraInfo, 32, info);
     //Serial.print("streamtitle ");Serial.println(info);
-    onScreens("Streamtitle::",String(info).c_str(),191);
+    onScreens("Streamtitle::",String(info).c_str(),399);
 }
 void audio_bitrate(const char *info){
     Serial.print("bitrate     ");Serial.println(info);
@@ -397,7 +407,7 @@ void audio_icyurl(const char *info){  //homepage
 }
 void audio_lasthost(const char *info){  //stream URL played
     //Serial.print("lasthost    ");Serial.println(info);
-    onScreens("Lasthost::",String(info).c_str(),203);
+    onScreens("Lasthost::",String(info).c_str(),412);
 }
 void audio_eof_speech(const char *info){
     Serial.print("eof_speech  ");Serial.println(info);
@@ -410,7 +420,7 @@ String getRadioInfo(){
   String v = String(cur_volume);
   String q = String(cur_equalizer);
   String n = String(cur_station);
-  String s = "getRadioInfo";    //String(clio.radia[cur_station].info);
+  String s = hostNAME;    //String(clio.radia[cur_station].info);
   String ri    = String(WiFi.RSSI());
     LCD_Buffer1 = extraInfo;
     //LCD_Buffer2 = s;
@@ -432,20 +442,16 @@ String getRadioInfo(){
 void setCurVolume(){
     if (cur_volume < 0)  cur_volume = 0;
     if (cur_volume > 19) cur_volume = 19;
-    int ampli = clio.radia[cur_station].ampli;
-    if (cur_volume<2) ampli = 0;
+    //int ampli = clio.radia[cur_station].ampli;
+    //if (cur_volume<2) ampli = 0;
     audio.setVolume(cur_volume); // 0...21
-    //audio.setVolume(cur_volume + ampli); // 0...21
-    //clio.println("Vol="+String(cur_volume),0);
-    //clio.println(("Volume="+String(cur_volume)).c_str(),1); 
-    Serial.println("#433 ?????Vol="+String(cur_volume));
-    Serial.println("#434 ???ampli="+String(ampli));  
+    Serial.println("#448 ?????Vol="+String(cur_volume));
     savePreferences();
 }
 
 //ajax
 void audio_ChangeVolume(String ParamValue){
-  LastTimerSLEEP = millis()-10000;
+  LastTimerSLEEP = millis()-60000;
     if (ParamValue=="p") cur_volume++;
     if (ParamValue=="m") cur_volume--;
     if (ParamValue=="*") cur_volume++;
@@ -453,18 +459,23 @@ void audio_ChangeVolume(String ParamValue){
     setCurVolume();
 }
 
-void audio_SetStationNr(String ParamValue){
-    cur_station = ParamValue.toInt();
-    playCurStation();
+
+void audio_SetIncreaseStation(int delta){
+    cur_station += delta;
+    if (cur_station<0) cur_station=LAST_STATION;
+    if (cur_station>LAST_STATION) cur_station=0; 
+    Serial.print("#467 cur_station=");Serial.println(cur_station);
+    audio_ChangeStation(String(cur_station));
+    //playCurStation(); ---usun ---won
 }
 
 //#define isint(X) (!((X)==(X)))
 
 void audio_SetStationUrl(const String ParamValue){
-  Serial.println("#491 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"); 
+  Serial.println("#575 xxxxxxxxxxxxxxxxxxx---won"); 
         hostURL = ParamValue;
         
-          Serial.println("#494 audio_SetStationUrl hostURL==="); 
+          Serial.println("#478 audio_SetStationUrl hostURL==="); 
           Serial.println(hostURL); 
 
       //onScreens(("Url="+String(ParamValue)),483);
@@ -475,83 +486,29 @@ void audio_SetStationUrl(const String ParamValue){
       audio.connecttohost(ParamValue.c_str());
       audio.setVolume(cur_volume);
       es_volume(start_volume);
-      savePreferences();
-      Serial.print("cur_host=");Serial.println(cur_host);
-      clio.radia[cur_host].stream = hostURL.c_str();
-      clio.radia[cur_station].info = ("host"+String(cur_host)).c_str();  
-      cur_host++;
-      if (cur_host>3) cur_host=0;
-
-      
+      savePreferences();   
 }
 
 void audio_ChangeStation(String ParamValue){
-    LastTimerSLEEP = millis()-10000;
-    Serial.println('+++++++++++++++++++++');
-    //Serial.println(valu);
-    //Serial.println(isnan(valu));
-    //Serial.println(isint(valu));
-    //if (isnan(valu)) cur_station = valu;
-    if (ParamValue=="p") cur_station++;
-    if (ParamValue=="m") cur_station--;
-    if (ParamValue=="*") cur_station++;
-    if (ParamValue=="-") cur_station--;  
-    playCurStation();
-}
-
-// bez mp3
-void playCurStation(){
-  return;
-    if (cur_station < 0) cur_station = 4;
-    if (cur_station > 4) cur_station = 0; 
-    es_volume(0);
-        String CoJestGrane = "/"+String(clio.radia[cur_station].info)+".mp3"; 
-        if (!SPIFFS.exists(CoJestGrane)){
-            CoJestGrane = "/r.mp3";
-        }
-        const char* stacjaNazwa = CoJestGrane.c_str();
-        Serial.print("#473 stacjaNazwa=");Serial.println(stacjaNazwa);
-            
-    audio.connecttohost(hostURL.c_str());
-    //???????????????????????????????????????????????????????//
-    //audio.connecttohost(clio.radia[cur_station].stream);
-    //clio.println(("Stacja="+String(clio.radia[cur_station].info)).c_str(),0);   
-    //onScreens("cur_station",("Station="+String(cur_station)).c_str(),423);
-    Serial.print("#546 clio.radia=");
-    Serial.print(clio.radia[cur_station].info);
-    Serial.println(clio.radia[cur_station].stream);
-    savePreferences();
-}
-/*
-void playCurStationURL(){
-        audio.stopSong();
-        //es.mute(ES8388::ES_MAIN, true);
-        if (cur_station <  0)            cur_station = last_stations;
-        if (cur_station > last_stations) cur_station = 0;    
-        //onScreens(String(cur_station).c_str(),392);
+    audioStop();
+    
+    LastTimerSLEEP = millis()-60000;
+    Serial.println("#496 audio_ChangeStation.............");
+    Serial.println(ParamValue);
+    cur_station = ParamValue.toInt();
+          preferences.begin("my-app", false);
+            String keyName = "sName" + ParamValue;
+            String keyUrl  = "sUrl"  + ParamValue;
+            String sName  = preferences.getString(keyName.c_str(),"tok-fm");
+            String sUrl   = preferences.getString(keyUrl.c_str(),"http://pl-play.adtonos.com/tok-fm");
+            Serial.print("#504 sName=");  Serial.print(sName);  Serial.print(" sUrl= "); Serial.println(sUrl);
+            hostURL = sUrl;
+            hostNAME = sName;
+          preferences.end();
         savePreferences();
-        //delay(222);
-        //es.mute(ES8388::ES_MAIN, false);
-        audio.connecttohost(clio.radia[cur_station].stream);  
-      
+
+      audioStart();
 }
-*/
-/* 
-// z mp3
-  void playCurStation(){
-        String CoJestGrane = "/"+String(clio.radia[cur_station].info)+".mp3"; 
-        if (!SPIFFS.exists(CoJestGrane)){
-            CoJestGrane = "/r.mp3";
-        }
-        const char* stacjaNazwa = CoJestGrane.c_str();
-        //onScreens(stacjaNazwa,401);
-        audio.stopSong();
-        es.mute(ES8388::ES_MAIN, true);
-        delay(222);
-        es.mute(ES8388::ES_MAIN, false);
-        audio.connecttoFS(SPIFFS, stacjaNazwa);
-      
-}*/
 
 void audio_SetEQNr(String ParamValue){
       cur_equalizer = ParamValue.toInt();
@@ -566,8 +523,8 @@ void audio_SetEQ(String ParamValue){
         arr[i] = l.toInt();
         //Serial.print(i);Serial.print("=");Serial.println(arr[i]);
       }
-      //audio.setTone(arr[0],arr[1],arr[2]);
-      audio.newTone(arr[0],arr[1],arr[2],arr[3],arr[4],arr[5],arr[6]);
+      audio.setTone(arr[0],arr[1],arr[2]);
+      //audio.newTone(arr[0],arr[1],arr[2],arr[3],arr[4],arr[5],arr[6]);
       //????????????????????????????????????????????????????????????????????????????????????????????????????
 }
 
@@ -575,7 +532,7 @@ void audio_SetEQ(String ParamValue){
 void ESP_sleep_za(const String ParamValue){
     unsigned long newTime = ParamValue.toInt(); // time in minutes
     timerSLEEP = newTime * 60 *1000;
-    Serial.println("#595 new Sleep "+String(timerSLEEP));
+    Serial.println("#535 new Sleep "+String(timerSLEEP));
     //clio.println("Sleep "+String(ParamValue),1);
     LCD_Buffer2="Sleep "+String(ParamValue);
 }
@@ -588,12 +545,14 @@ void esp_reBootSleep(const String ParamValue){
         delay(1500); 
         ESP.restart();
     } // reboot
-    if (ParamValue=="1") {audio.stopSong(); delay(500);playCurStation();} //replay
+    if (ParamValue=="1") {audioStop(); delay(500);audioStart();} //replay
     if (ParamValue=="2") {
         audio.stopSong();
         es_volume(0); 
         String czas = String((timerSLEEP/(1000*60)));
-        clio.drukLCD("Sleep " + czas);
+        //clio.drukLCD("Sleep " + czas);
+        clio.println("Sleep " + czas,0);
+        clio.println(clio.getClock(),1);
         delay(500); 
         esp_sleep_enable_ext0_wakeup(GPIO_NUM_18,0);
         esp_deep_sleep_start();
@@ -601,17 +560,6 @@ void esp_reBootSleep(const String ParamValue){
   
 }
 
-//qqqqqqqqqqqqqqqq?????????????????????????????????????????????????????////////////////////???????????????/
-void saveDATA(const String ParamValue){
-    Serial.println("saveDATA==============");
-    Serial.println(ParamValue);
-    savePreferences();
-}
-
-
-/************* SERVER *******************/
-/************* SERVER *******************/
-/************* SERVER *******************/
 /************* SERVER *******************/
 /************* SERVER *******************/
 /************* SERVER *******************/
@@ -620,7 +568,7 @@ void saveDATA(const String ParamValue){
 void installServer(){
   clio.println("installServer...",1);
 
-  Serial.print("#600 indexPath=");
+  Serial.print("#571 indexPath=");
   Serial.println(indexPath);
   server.rewrite( "/", indexPath) ;
   server.rewrite( "/index.html", indexPath);
@@ -653,6 +601,40 @@ void installServer(){
   // AJAXY *************************
   // AJAXY *************************
   // AJAXY *************************
+  server.on("/key", HTTP_GET, [](AsyncWebServerRequest *request){
+      int params = request->params();
+      AsyncWebParameter* p0 = request->getParam(0); 
+      AsyncWebParameter* p1 = request->getParam(1); 
+      AsyncWebParameter* p2 = request->getParam(2); 
+      String name0  = String(p0->name());
+      String name1  = String(p1->name());
+      String name2  = String(p2->name());
+      String val0   = p0->value();
+      String val1   = p1->value();
+      String val2   = p2->value();
+       
+      //Serial.print("#710 name= ");Serial.print(name0.c_str()); Serial.print("="); Serial.println(val0.c_str());
+      //Serial.print("#711 val = ");Serial.print(name1.c_str()); Serial.print("="); Serial.println(val1.c_str());
+      //Serial.print("#712 nr  = ");Serial.print(name2.c_str()); Serial.print("="); Serial.println(val2.c_str());
+      //Serial.println();
+
+      String nr       = val2;
+      String nameName = "sName"+nr;
+      String nameVal  =  val0;
+      String strmName = "sUrl"+nr;
+      String strmVal  =  val1;
+      Serial.print("#626  ");Serial.print(nameName); Serial.print(" = "); Serial.println(nameVal);
+      Serial.print("#627  ");Serial.print(strmName); Serial.print(" = "); Serial.println(strmVal);
+      Serial.println();
+         preferences.begin("my-app", false);
+         preferences.putString(nameName.c_str(), nameVal.c_str());     
+         preferences.putString(strmName.c_str(), strmVal.c_str());     
+         preferences.end();
+      
+      request->send(200, "text/plain",getRadioInfo());
+  });
+  
+  
   server.on("/radio", HTTP_GET, [](AsyncWebServerRequest *request){
     clio.ledled();
     
@@ -662,27 +644,27 @@ void installServer(){
      int params = request->params();
      for(int i=0;i<params;i++){
           AsyncWebParameter* p = request->getParam(i); 
-          //Serial.print("#693 get?");Serial.print(p->name().c_str()); Serial.print("="); Serial.println(p->value().c_str());
+          //Serial.print("#705 get? ");Serial.print(i); Serial.print(". ");Serial.print(p->name().c_str()); Serial.print("="); Serial.println(p->value().c_str());
           
           String ParamName  = String(p->name());
-          String ParamValue = p->value();
-                //#ifdef DEBUG
-                   //if(ParamName !="n") onScreens((String("PName | PValue= ")+String(ParamName)+" | "+String(ParamValue)).c_str(),662);
-               // #endif  
-           
+          String ParamValue = p->value();               
+         Serial.print("#651 ");Serial.print(ParamName);Serial.print("=");Serial.println(ParamValue);
+         
            if (ParamName=="start") {audio.pauseResume();}
            if (ParamName=="v")  audio_ChangeVolume(ParamValue);  
            if (ParamName=="s")  audio_ChangeStation(ParamValue); 
-           if (ParamName=="t")  audio_SetStationNr(ParamValue);
+           //if (ParamName=="t")  audio_SetStationNr(ParamValue);
            if (ParamName=="q")  audio_SetEQNr(ParamValue);
            if (ParamName=="qq")  audio_SetEQ(ParamValue);
-           if (ParamName=="z")  saveDATA(ParamValue); 
+           //if (ParamName=="z")  saveDATA(ParamValue); 
            if (ParamName=="x")  audio_SetStationUrl(ParamValue);
            if (ParamName=="r")  {esp_reBootSleep(ParamValue);}
            if (ParamName=="y")  ESP_sleep_za(ParamValue);
+           //if (ParamName=="a")  saveStation2Preferences(ParamValue);
+           if (ParamName=="nx")  audio_SetIncreaseStation(1);
+           if (ParamName=="pr")  audio_SetIncreaseStation(-1);
            
-          if (ParamName=="n") { // drugi parametr
-          }
+            if (ParamName=="n") {  }
            
                      
            if (ParamName=="mp3")  {
@@ -691,7 +673,7 @@ void installServer(){
 
           if (ParamName=="w") {
               //zapiszSPIFFS("/ssid.txt",p->value().c_str());
-              //Serial.print("#748 radio?w="); Serial.println(ParamValue);
+              //Serial.print("#676 radio?w="); Serial.println(ParamValue);
           }
 
          // prog mem prog mem prog mem prog mem prog mem prog mem
@@ -715,6 +697,17 @@ void installServer(){
   DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
   server.begin();
   //initWebSocket(); 
-  Serial.println("#810 Start 333333333333333");
-  audio.connecttohost(hostURL.c_str());
+  Serial.println("#700 Start SERVER");
+  //audio.connecttohost(hostURL.c_str());
+  // po uruchomieniu servera
+  audioStart();
 }
+
+
+/*
+Szkic używa 1 256 946 bajtów (39%) pamięci programu. Maksimum to 3145728 bajtów.
+Zmienne globalne używają 52 636 bajtów (16%) pamięci dynamicznej, pozostawiając 275044 bajtów dla zmiennych lokalnych. Maksimum to 327680 bajtów.
+
+
+
+ */

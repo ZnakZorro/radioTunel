@@ -1,4 +1,4 @@
-
+/*
 void listFileFromSPIFFS(){
     unsigned int totalBytes = SPIFFS.totalBytes();
     unsigned int usedBytes = SPIFFS.usedBytes();
@@ -14,6 +14,48 @@ void listFileFromSPIFFS(){
       file = root.openNextFile();
   }
 }
+*/
+/*
+void readDATA(){ 
+    File file2 = SPIFFS.open("/streams.txt");
+ 
+    if(!file2){
+        Serial.println("Failed to open file for reading");
+        return;
+    }
+ 
+    Serial.println("File Content::::::::::::::::::::");
+ 
+    while(file2.available()){
+ 
+        Serial.write(file2.read());
+    }
+ 
+    file2.close();
+}
+
+
+void saveDATA(const String ParamValue){
+    Serial.println("#606 saveDATA==============");
+    Serial.println(ParamValue);
+    //savePreferences();
+                    File file = SPIFFS.open("/streams.txt", FILE_WRITE);
+                   
+                    if (!file) {
+                      Serial.println("There was an error opening the file for writing");
+                      return;
+                    }
+                    if (file.print(ParamValue)) {
+                      Serial.println("File was written++");
+                    } else {
+                      Serial.println("File write failed---");
+                    }
+                   
+                    file.close();    
+}
+*/
+
+
 
 
 /*
