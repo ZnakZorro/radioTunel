@@ -72,7 +72,7 @@
 
     const radioSlij=(el,nr=null)=>{
       //console.log("#radioSlij");
-      //console.log(el,nr);
+      console.log(el,nr);
         removeActive("div.radia button");
         el.target.classList.add("active");
         let data = el.target.dataset;
@@ -84,6 +84,8 @@
         else    radioFETCH("x="+data.stream);
         //refreshInfo(3);
         refreshInfo(6);
+        let sta = parseInt(el.target.dataset.st);
+        $("#sta").textContent = (sta+1).toString();
     }
   
 
@@ -152,12 +154,11 @@
         //console.log(streamsDEF,streamsDEF.length)
         if (!streamsDEF) {alert("Brak stacji"); return;}
         let html = "";
-        html += '<button onClick="radioFETCH(\"pr=0\");" class="navy">St--</button>';
-        html += '<button onClick="radioFETCH(\"nx=0\");" class="navy">St++</button>';
+        
         streamsDEF.forEach((s,i)=>{
           console.log(i,i<ileNumerow)
           let klasa = 'class="info"';
-          if (i<6) klasa = 'class="nr"';
+          if (i<6) klasa = 'class="info nr"';
           html += '<button '+klasa+' id="st'+i+'" data-st="'+i+'" data-n="'+s.n+'" data-a="'+s.a+'" data-stream="'+s.s+'" >'+s.n+'</button>';
         });
         document.querySelector("div.radia").innerHTML = html;
