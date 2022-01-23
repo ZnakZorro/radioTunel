@@ -1,7 +1,8 @@
 
     const $=e=>document.querySelector(e);
     const $$=e=>document.querySelectorAll(e);
-      
+    const ileNumerow = 6;
+
     let streamsDEF = [
     {"a":"0", "n": "TOK-FM","s":"http://pl-play.adtonos.com/tok-fm"},
     {"a":"0", "n": "RNS",   "s":"http://stream.rcs.revma.com/ypqt40u0x1zuv"},
@@ -63,10 +64,15 @@
     const removeActive=(dom)=>{
       $$(dom).forEach((e)=>e.classList.remove("active"));
     }
-    
-    const radioSlij=(el)=>{
+
+    const radioByNumer=(el)=>{
+        let nr = parseInt(el.target.dataset.st);
+        radioSlij(el,nr)
+    }
+
+    const radioSlij=(el,nr=null)=>{
       //console.log("#radioSlij");
-      //console.log(el);
+      //console.log(el,nr);
         removeActive("div.radia button");
         el.target.classList.add("active");
         let data = el.target.dataset;
@@ -74,10 +80,13 @@
         $("#stream").textContent = data.stream;
         $("#newName").value=data.n;
         $("#newURL").value=data.stream;
-        radioFETCH("x="+data.stream);
-        refreshInfo(5);
+        if (nr) radioFETCH("s="+nr);
+        else    radioFETCH("x="+data.stream);
+        //refreshInfo(3);
+        refreshInfo(6);
     }
-    
+  
+
     const refreshInfo=(sek=5)=> {
        setTimeout(()=>{radioFETCH("n=0");},1000*sek);
     }
@@ -143,11 +152,19 @@
         //console.log(streamsDEF,streamsDEF.length)
         if (!streamsDEF) {alert("Brak stacji"); return;}
         let html = "";
+        html += '<button onClick="radioFETCH(\"pr=0\");" class="navy">St--</button>';
+        html += '<button onClick="radioFETCH(\"nx=0\");" class="navy">St++</button>';
         streamsDEF.forEach((s,i)=>{
-          if (s) html += '<button id="st'+i+'" data-st="'+i+'" data-n="'+s.n+'" data-a="'+s.a+'" data-stream="'+s.s+'" class="info">'+s.n+'</button>';
+          console.log(i,i<ileNumerow)
+          let klasa = 'class="info"';
+          if (i<6) klasa = 'class="nr"';
+          html += '<button '+klasa+' id="st'+i+'" data-st="'+i+'" data-n="'+s.n+'" data-a="'+s.a+'" data-stream="'+s.s+'" >'+s.n+'</button>';
         });
         document.querySelector("div.radia").innerHTML = html;
-        document.querySelectorAll("div.radia button").forEach((e)=>e.addEventListener('click', radioSlij, false)); 
+        document.querySelectorAll("div.radia button").forEach((e,i)=>{
+            if (i<6) e.addEventListener('click', radioByNumer, false)
+            else     e.addEventListener('click', radioSlij, false)
+        }); 
         
     }
   
