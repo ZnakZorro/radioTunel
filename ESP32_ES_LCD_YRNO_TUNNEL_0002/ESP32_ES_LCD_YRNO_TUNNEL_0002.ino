@@ -68,8 +68,8 @@ unsigned long timerDelay15m = 1000 * 60 *15*3;  // 15minut * 3 = 45
 unsigned long lastTime = 0;
 unsigned long millisy = 0;
 
-String LCD_Buffer1;
-String LCD_Buffer2;
+String LCD_Buffer1="                ";
+String LCD_Buffer2="                ";
 
 String jsonBuffer;
 int loopa=0;
@@ -121,10 +121,15 @@ void pogoda2LCD(){
       //Serial.print("1= "); Serial.println(clio.linieLCD[1]);
       //Serial.print("2= "); Serial.println(clio.linieLCD[2]);
       clio.println(clio.linieLCD[loopa],1);
+      if (loopa==0) {
+          
+          clio.println(LCD_Buffer1,0);
+          //clio.println(LCD_Buffer2,0);
+      }
+      //if (loopa==1) clio.println(LCD_Buffer1,0);
+      //if (loopa==2) clio.println(LCD_Buffer2,0);
+      if (loopa==2) clio.println(clio.getClock(),0);
       
-      if (loopa==1) clio.println(LCD_Buffer1,0);
-      if (loopa==2) clio.println(LCD_Buffer2,0);
-      if (loopa==3) clio.println(clio.getClock(),0);
         
       loopa = (loopa+1) % 7;      
 }
@@ -156,7 +161,8 @@ String httpGETRequest(const char* serverName) {
 
 void getYrnoPogoda(){
   Serial.println("Pogoda...");
-  clio.drukLCD("Pogoda...");
+  //clio.drukLCD("Pogoda...");
+  clio.println("Pogoda...",1);
      if(WiFi.status()== WL_CONNECTED){
       String serverPath = proxyHost;
       Serial.println(serverPath);
@@ -178,6 +184,7 @@ void savePreferences(){
          preferences.putUInt("cur_equalizer", cur_equalizer);  
          preferences.putString("hostURL", hostURL);     
          preferences.end();
+         //LCD_Buffer1 = "Vol="+String(cur_volume);
 }  
   
 void es_volume(int volum){
@@ -194,6 +201,7 @@ void audioStop(){
     audio.setVolume(0);
     audio.stopSong();
     Serial.println(audio.isRunning());
+    
     millisTEST = millis();
 }
 
@@ -203,6 +211,7 @@ void audioStart(){
     audio.connecttohost(hostURL.c_str()); 
     es_volume(start_volume);
     audio.setVolume(cur_volume);
+    LCD_Buffer2 = hostNAME;
     Serial.print("millis=");Serial.println(millis() - millisTEST);
     Serial.print("isRun =");Serial.println(audio.isRunning());
 }
@@ -215,7 +224,8 @@ void setup()
     clio.initLED(LED_BUILTIN);
     clio.ledled();    
     clio.initLCD(IIC_DATA, IIC_CLK);
-    clio.drukLCD("clio.drukLCD");
+    //clio.drukLCD("RADIO");
+    clio.println("RADIO...",0);
           preferences.begin("my-app", false);
           cur_station   = preferences.getUInt("cur_station", 1);
           cur_volume    = preferences.getUInt("cur_volume", cur_volume_DEF);
@@ -256,12 +266,14 @@ void setup()
     while(wifiMulti.run() != WL_CONNECTED) {
       Serial.print("*");
       licznik++;
-      clio.drukLCD("WiFi::"+String(licznik));
+      //clio.drukLCD("WiFi::"+String(licznik));
+      clio.println("WiFi::"+String(licznik),0);
       delay(333);
+      if (licznik>50) ESP.restart();
       } 
-    clio.drukLCD("Conected..."); 
-    clio.println("WiFi",1); 
-    delay(800);
+    //clio.drukLCD("Conected..."); 
+    //clio.println("WiFi",1); 
+    //delay(800);
     Serial.printf_P(PSTR("Connected\r\nRSSI: "));
     Serial.print("WiFi.status="); Serial.println(WiFi.status());
     Serial.print("WiFi.RSSI=");   Serial.println(WiFi.RSSI());
@@ -302,6 +314,7 @@ void setup()
       LastTimerSLEEP = millis();
       snprintf(extraInfo, 32, hostURL.c_str());
       installServer();
+      LCD_Buffer2 = "Vol="+String(cur_volume) + ", Sta="+String(cur_station);
 }
 // setup end ----------------------------------------------------------------------------------------------------------------------
 
@@ -328,6 +341,7 @@ void loop()
     //Serial.println("pogoda2LCD --------------"); 
       pogoda2LCD();
       lastSecundDelay = millisy;
+      if (audio.isRunning() == false) audioStart();
   }
     
 
@@ -393,6 +407,7 @@ void audio_showstreaminfo(const char *info){
 }
 void audio_showstreamtitle(const char *info){
   snprintf(extraInfo, 32, info);
+  LCD_Buffer1 = String(info).substring(0,16);
     //Serial.print("streamtitle ");Serial.println(info);
     onScreens("Streamtitle::",String(info).c_str(),399);
 }
@@ -445,7 +460,16 @@ void setCurVolume(){
     //int ampli = clio.radia[cur_station].ampli;
     //if (cur_volume<2) ampli = 0;
     audio.setVolume(cur_volume); // 0...21
-    Serial.println("#448 ?????Vol="+String(cur_volume));
+    Serial.println("#464 ?????Vol="+String(cur_volume));
+    //LCD_Buffer2 = "Vol="+String(cur_volume);
+    //LCD_Buffer2 = "Sta="+String(cur_station);
+    //clio.println(LCD_Buffer1,0);
+        //clio.drukLCD("Vol="+String(cur_volume));
+        //String  printext = String(cur_volume);
+        //printext = "Vol="+printext;
+        //clio.println(printext,0);
+        //clio.println(printext.c_str(),1);
+        //clio.drukLCD(printext);
     savePreferences();
 }
 
@@ -506,7 +530,9 @@ void audio_ChangeStation(String ParamValue){
             hostNAME = sName;
           preferences.end();
         savePreferences();
-
+        //clio.drukLCD("Sta="+String(cur_station));
+        //clio.println("Sta="+String(cur_station),0);
+        //LCD_Buffer2 = "Sta="+String(cur_station);
       audioStart();
 }
 
