@@ -6,10 +6,10 @@
     let streamsDEF = [
     {"a":"0", "n": "TOK-FM","s":"http://pl-play.adtonos.com/tok-fm"},
     {"a":"0", "n": "RNS",   "s":"http://stream.rcs.revma.com/ypqt40u0x1zuv"},
-    {"a":"0", "n": "357",   "s":"http://stream.rcs.revma.com/ye5kghkgcm0uv"},
-    {"a":"2", "n": "SwissJazz","s":"http://stream.srg-ssr.ch/m/rsj/mp3_128"},
+    {"a":"0", "n": "357",   "s":"http://stream.rcs.revma.com/ye5kghkgcm0uv"}, 
     {"a":"2", "n": "SwissClassic","s":"http://stream.srg-ssr.ch/m/rsc_de/mp3_128"},
     {"a":"2", "n": "ClassicFM", "s":"http://media-the.musicradio.com/ClassicFM"},
+    {"a":"2", "n": "SwissJazz","s":"http://stream.srg-ssr.ch/m/rsj/mp3_128"},
     {"a":"1", "n": "RMF Classic","s":"http://www.rmfon.pl/n/rmfclassic.pls"},
     {"a":"1", "n": "Dwojka","s":"http://mp3.polskieradio.pl:8952/;"},
     //{"a":"1", "n": "RockService","s":"http://stream.open.fm/379"},
@@ -34,9 +34,12 @@
     const opisInfoRadio=(tx)=>{
       let arr = tx.split("!");
       console.log(arr);
-      $("#info").textContent = arr[4] || "info";
+      $("#sta").textContent  = arr[0] || "0";
       $("#vol").textContent  = arr[1] || "0";
       $("#rsid").textContent = arr[2] || "-0";
+      $("#name").textContent = arr[3] || "-0";
+      $("#info").textContent = arr[4] || "info";
+      
       let eq = arr[5] || "0";
       let host = arr[7] || null;
       
@@ -53,7 +56,7 @@
               //console.log(data);
               removeActive("div.radia button")
               $("#st"+nr).classList.add("active");
-              
+              $("#sta").textContent  = nr;
               $("#name").textContent = data.n;
               $("#stream").textContent = data.stream;
           }
@@ -86,6 +89,7 @@
         refreshInfo(6);
         let sta = parseInt(el.target.dataset.st);
         $("#sta").textContent = (sta+1).toString();
+        
     }
   
 
@@ -156,7 +160,7 @@
         let html = "";
         
         streamsDEF.forEach((s,i)=>{
-          console.log(i,i<ileNumerow)
+          //console.log(i,i<ileNumerow)
           let klasa = 'class="info"';
           if (i<6) klasa = 'class="info nr"';
           html += '<button '+klasa+' id="st'+i+'" data-st="'+i+'" data-n="'+s.n+'" data-a="'+s.a+'" data-stream="'+s.s+'" >'+s.n+'</button>';
