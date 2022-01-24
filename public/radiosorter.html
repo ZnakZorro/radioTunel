@@ -239,11 +239,15 @@ let kosz = document.getElementById("kosz");
     /*qqqqqqqqqqqqqqqqqqqqqqqqqqq*/
     function kasujOBJ(obj){
         let name = obj.textContent;
-        if (confirm("Czy kasować "+name+"?")) { 
+        //if (confirm("Czy kasować "+name+"?")) 
+        { 
             let nr = obj.dataset.nr;
             let wybrane = document.querySelectorAll('[data-nr="'+nr+'"]');
-            if (wybrane[0]) wybrane[0].style.display="none";
-            if (wybrane[0]) wybrane[1].style.display="none";
+            //if (wybrane[0]) wybrane[0].style.display="none";
+            //if (wybrane[0]) wybrane[1].style.display="none";
+            if (wybrane[0]) wybrane[0].remove();
+            if (wybrane[0]) wybrane[1].remove();
+            
             //console.log(nr);
             //console.log(wybrane);
         }
