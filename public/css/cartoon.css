@@ -9,6 +9,8 @@
       margin: 0;  
       position: relative;
     }
+    .fontInherit {font-size: inherit!important;}
+
     #app {position: relative; width: 100%;display: grid;}
     
     .wrap {
@@ -21,15 +23,17 @@
     .col {
         grid-template-columns: repeat(auto-fit,minmax(120px,1fr));
     }
+    
     p {margin:0;}
+    p.center {margin:0.5em 0; text-align: center;}
     small {font-size:0.6em;}  
     div {display:inline-block; margin:0.15em 0;padding: 0.15em;width: 100%;}
     #sta,#vol {min-width:2em; text-align: center; display: inherit;}
-    button {
+    button,.button {
       padding: 0.75em;
       border: 1px;
       background-color: #00bcbe;
-      
+      text-decoration: none;
       color: #fff;
       margin:0.2em;
       border-radius: 0.8em;
@@ -46,7 +50,7 @@
     button.warn   {background-color: orange;color: #000;}
     button.navy   {background-color: darkviolet;color: white;}
     
-    button.info {
+    button.info, .button.info{
       background-color: #369;
       color: #fff;
       min-width: 9em;
@@ -63,19 +67,19 @@
       }
     div.sm button {font-size:0.75em;margin:0.2em 0.1em; padding: 0.65em 0.25em;background:#842;}
     div.admi button {background-color: orange;color: #000; min-width:7.1em;}
-    div.bg {background-color: whitesmoke; margin-top: 0.5em;}
+    div.bg {background-color: whitesmoke; margin: 0.75em 0; padding: 1em 0;}
     div.add {}
     div.add p {margin-bottom: 0.5em;}
     div.add span {display: inline-block;min-width:4em;}
     div.add input {width: calc(99% - 5em);font-size: 1em;}
     input[type="file"] {font-size: 1em; background-color: thistle;}
 
-    .button {
+    .button {/*
       background: #ccffff;
       cursor: pointer;
       width:100%;
       padding: 0.5em;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);*/
     }
     .button:hover {opacity: 0.7;}
     .acordion {
