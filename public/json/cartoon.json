@@ -14,10 +14,21 @@
     {"n": "Campus",         "s":"http://193.0.98.66:8002/listen.pls"},
     {"n": "PR24",           "s":"http://stream3.polskieradio.pl:8480/listen.pls"},
     {"n": "Szczecin Plus",  "s":"http://waw01-01.ic.smcdn.pl:8000/4260-1.aac.m3u"},
-    {"n": "Szczecin Eska",  "s":"http://waw01-01.ic.smcdn.pl:8000/2260-1.aac.m3u"}
+    {"n": "Szczecin Eska",  "s":"http://waw01-01.ic.smcdn.pl:8000/2260-1.aac.m3u"},
+    {"n": "TOP5",           "s": "http://195.150.20.243:8000/rmf_top_5_pl"},
+    {"n": "MobileJazz",     "s": "http://strm112.1.fm/blues_mobile_mp3"}, 
+    {"n": "Venice",         "s": "http://174.36.206.197:8000/stream"}, 
+    {"n": "Barock",         "s": "http://stream.klassikradio.de/barock/mp3-192"}, 
+    {"n": "PureBach",       "s": "http://stream.klassikradio.de/purebach/mp3-192/www.klassikradio.de/"}, 
+    {"n": "1.FM",           "s": "http://strm112.1.fm/baroque_mobile_aac"}, 
+    {"n": "101Smooth",      "s": "https://ais-sa5.cdnstream1.com/b48071_128mp3"}    
 ],
 "ampli":[
- {"n": "SwissClassic",  "a":"2"},
- {"n": "ClassicFM",     "a":"2"} 
+    {"n": "SwissClassic",  "a":"2"},
+    {"n": "ClassicFM",     "a":"2"},
+    {"n": "Venice",        "a":"2"}, 
+    {"n": "Barock",        "a":"2"}, 
+    {"n": "PureBach",      "a":"2"},
+    {"n": "1.FM",          "a":"2"}
 ]
 }
