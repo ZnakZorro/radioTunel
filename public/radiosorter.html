@@ -30,13 +30,29 @@
         margin-top: 0.5em!important;
 		text-align:center;
 		cursor:move!important;
-	}   
+	}
+    #kosz,.klawisze {width:100%; min-height:4em; background-color: #9bf;} 
 </style>
+<script>
+const zapisz=()=>{
+    let stacje = document.querySelectorAll("ul#stacje li");
+    console.log(stacje)
+    let streamsDEF = [];
+    stacje.forEach((s)=>{
+        let d=s.dataset
+        //console.log(d.n,d.a,d.s)
+        streamsDEF.push({"a":d.a,"n":d.n,"s":d.s})
+    })
+    console.log(streamsDEF);
+    localStorage.setItem("streamsDEF", JSON.stringify(streamsDEF));
+}
+</script>
 </head>
 <body>
 
 <div style="width:100%; display: grid;">
     <div class="wrap">
+        <div id="kosz"> Kosz</div>
         <ul id="stacje">
             <li style="background:red;">1</li>
             <li style="background:orange;">2</li>
@@ -47,18 +63,22 @@
             <li style="background:violet;">7</li>
         </ul>
     </div>
+    <div class="wrap klawisze">
+        <button class="btn warn" onClick="zapisz()">Zapisz</button> 
+        <button class="btn warn" style="float: right;" onClick="location.href='./';">KONIEC</button>
+    </div>
 </div>
 
 <script>
 if (localStorage.getItem("streamsDEF")){ 
         let odczyt = localStorage.getItem("streamsDEF");
         let obj = JSON.parse(odczyt)
-        console.log(obj);
+        //console.log(obj);
        
         let html = "";
         obj.forEach((o)=>{
-            console.log(o);
-            html += `<li class="button info">${o.n}</li>`;
+            //console.log(o);
+            html += `<li data-n="${o.n}" data-a="${o.a}" data-s="${o.s}" class="button info">${o.n}</li>`;
         });
         let stacje = document.getElementById("stacje");
         stacje.innerHTML = html; 
