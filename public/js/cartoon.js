@@ -120,17 +120,17 @@
       })
       .catch(e => {console.log(e)})
   }  
-    const odczytajStacje=()=>{
-        //console.log("zapiszStacje")
-        //console.log(streamsDEF);
-        if (localStorage.getItem("streamsDEF")){ 
-          let odczyt = localStorage.getItem("streamsDEF");
-          //console.log(odczyt)   
-          return JSON.parse(odczyt);
-        } else return null;   
-    }
-  
-    const zapiszStacje=()=>{
+  const odczytajStacje=()=>{
+      //console.log("zapiszStacje")
+      //console.log(streamsDEF);
+      if (localStorage.getItem("streamsDEF")){ 
+        let odczyt = localStorage.getItem("streamsDEF");
+        //console.log(odczyt)   
+        return JSON.parse(odczyt);
+      } else return null;   
+  }
+
+  const zapiszStacje=()=>{
         //console.log("zapiszStacje")
         //console.log(streamsDEF)
         localStorage.setItem("streamsDEF", JSON.stringify(streamsDEF));
@@ -247,9 +247,23 @@
         };
         reader.readAsText(file);
       }
-     
+
+    const readStationsJSON=()=>{
+      let u="https://znakzorro.github.io/radioTunel/public/json/cartoon.json";
+      fetch(u)
+        //.then(checkForError)
+        .then(r => {return r.json()})
+        .then(obj => {
+            console.log(obj.radio);
+            console.log(obj.ampli);
+        })
+        .catch(e => {console.log(e)})      
+    }
+      
     // dom ready
       document.addEventListener("DOMContentLoaded",function(){
+        readStationsJSON();
+        //console.log(odczyt)
         let odczyt=odczytajStacje();
         //console.log(odczyt)
         if(odczyt) streamsDEF = odczyt;
