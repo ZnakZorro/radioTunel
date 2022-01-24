@@ -1,11 +1,12 @@
-
+<html lang="pl">
 <head>
   <meta charset="utf-8">
-  <title>ddd</title>
+  <title>RadioSort</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="HandheldFriendly" content="true">
   <meta name="mobile-web-app-capable" content="yes"> 
   <meta name="theme-color" content="#800">
+  <link rel="stylesheet" href="./css/cartoon.css" />
 
 <style>
  *{
@@ -13,42 +14,55 @@
 		padding:0;
 	}
 	body{
-		background: linear-gradient(to right, #ACBB78, #F7F8F8); 
+		/*background: linear-gradient(to right, #ACBB78, #F7F8F8); */
+        background-color: #000;
 	}
 	ul{
-		margin:50px auto;
-		position:relative;
-	}
-	ul,li{
-		display:block;
-		width:400px;
-		max-width:90vw;
+		margin:2em auto;
+		position:relative;	
+        display: block;
+        text-align:center;
+        width: 20em;
+        max-width: 95vw;
 	}
 	li{
-		height:50px;
-		line-height:50px;
-		margin:0 0 5px;
+        display: block;
+        margin-top: 0.5em!important;
 		text-align:center;
-		cursor:move;
+		cursor:move!important;
 	}   
 </style>
+</head>
+<body>
 
-
-
-
-<ul>
-    <li style="background:red;">1</li>
-    <li style="background:orange;">2</li>
-    <li style="background:yellow;">3</li>
-    <li style="background:green;">4</li>
-    <li style="background:blue;">5</li>
-    <li style="background:indigo;">6</li>
-    <li style="background:violet;">7</li>
-</ul>
-
-
+<div style="width:100%; display: grid;">
+    <div class="wrap">
+        <ul id="stacje">
+            <li style="background:red;">1</li>
+            <li style="background:orange;">2</li>
+            <li style="background:yellow;">3</li>
+            <li style="background:green;">4</li>
+            <li style="background:blue;">5</li>
+            <li style="background:indigo;">6</li>
+            <li style="background:violet;">7</li>
+        </ul>
+    </div>
+</div>
 
 <script>
+if (localStorage.getItem("streamsDEF")){ 
+        let odczyt = localStorage.getItem("streamsDEF");
+        let obj = JSON.parse(odczyt)
+        console.log(obj);
+       
+        let html = "";
+        obj.forEach((o)=>{
+            console.log(o);
+            html += `<li class="button info">${o.n}</li>`;
+        });
+        let stacje = document.getElementById("stacje");
+        stacje.innerHTML = html; 
+}
     var lis = document.querySelectorAll("li");
     var ul = document.querySelector("ul");
     var obj;
@@ -217,4 +231,5 @@
     
     </script>
     
-    
+</body>
+</html>
