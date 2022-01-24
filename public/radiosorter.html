@@ -32,9 +32,19 @@
 		text-align:center;
 		cursor:move!important;
 	}
-    #kosz,.klawisze {width:100%; min-height:4em; background-color: #9bf;} 
+    #kosz,.klawisze {
+        width: 100%;
+        display: grid;
+        min-height: 4em;
+        background-color: #9bf;
+        align-content: space-around;
+        justify-content: space-evenly;        
+    } 
+    button.info, .button.info {
+        min-width: 12em!important;
+    }    
     .active {background-color: red!important;}
-    .active {background-color: gold!important;}
+    .active2 {background-color: gold!important;}
 </style>
 <script>
 const zapisz=()=>{
@@ -43,8 +53,8 @@ const zapisz=()=>{
     let streamsDEF = [];
     stacje.forEach((s)=>{
         let d=s.dataset
-        //console.log(d.n,d.a,d.s)
-        streamsDEF.push({"a":d.a,"n":d.n,"s":d.s})
+        console.log(s.style.display)
+        if (s.style.display != "none") streamsDEF.push({"a":d.a,"n":d.n,"s":d.s})
     })
     console.log(streamsDEF);
     localStorage.setItem("streamsDEF", JSON.stringify(streamsDEF));
@@ -80,9 +90,9 @@ if (localStorage.getItem("streamsDEF")){
         //console.log(obj);
        
         let html = "";
-        obj.forEach((o)=>{
+        obj.forEach((o,nr)=>{
             //console.log(o);
-            html += `<li data-n="${o.n}" data-a="${o.a}" data-s="${o.s}" class="button info">${o.n}</li>`;
+            html += `<li data-nr="${nr}" data-n="${o.n}" data-a="${o.a}" data-s="${o.s}" class="button info">${o.n}</li>`;
         });
         let stacje = document.getElementById("stacje");
         stacje.innerHTML = html; 
@@ -226,13 +236,26 @@ let kosz = document.getElementById("kosz");
       obj.style.top = dist2 + "px";
       checkSuperposicion();
     }
+    /*qqqqqqqqqqqqqqqqqqqqqqqqqqq*/
+    function kasujOBJ(obj){
+        let name = obj.textContent;
+        if (confirm("Czy kasować "+name+"?")) { 
+            let nr = obj.dataset.nr;
+            let wybrane = document.querySelectorAll('[data-nr="'+nr+'"]');
+            if (wybrane[0]) wybrane[0].style.display="none";
+            if (wybrane[0]) wybrane[1].style.display="none";
+            //console.log(nr);
+            //console.log(wybrane);
+        }
+        //alert("Skasowano "+name+"!")
+    }
     function intercambiar() {
-        /*qqqqqqqqqqqqqqqqqqqqqqqqqqq*/
+        
         let yy = parseInt(obj.style.top);
         if (yy<-90){
-            console.log(obj.style.left,parseInt(obj.style.top),obj.textContent)
+            
             kosz.classList.add("active2");
-            delete obj;
+            kasujOBJ(obj);
             return;
         } else kosz.classList.remove("active2");        
          /*qqqqqqqqqqqqqqqqqqqqqqqqqqq*/
