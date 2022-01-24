@@ -1,0 +1,23 @@
+{"radio":[
+    {"n": "TOK-FM",         "s":"http://pl-play.adtonos.com/tok-fm"},
+    {"n": "RNS",            "s":"http://stream.rcs.revma.com/ypqt40u0x1zuv"},
+    {"n": "357",            "s":"http://stream.rcs.revma.com/ye5kghkgcm0uv"}, 
+    {"n": "SwissClassic",   "s":"http://stream.srg-ssr.ch/m/rsc_de/mp3_128"},
+    {"n": "ClassicFM",      "s":"http://media-the.musicradio.com/ClassicFM"},
+    {"n": "SwissJazz",      "s":"http://stream.srg-ssr.ch/m/rsj/mp3_128"},
+    {"n": "RMF Classic",    "s":"http://www.rmfon.pl/n/rmfclassic.pls"},
+    {"n": "Dwojka",         "s":"http://mp3.polskieradio.pl:8952/;"},
+    {"n": "RockService",    "s":"http://stream.open.fm/379"},
+    {"n": "101 Jazz",       "s":"https://ais-sa2.cdnstream1.com/b22139_128mp3"},
+    {"n": "Szczecin",       "s":"http://stream4.nadaje.com:11986/prs.aac.m3u"},
+    {"n": "Anty-Radio",     "s":"http://www.emsoft.ct8.pl/inne/anty.m3u"},
+    {"n": "Campus",         "s":"http://193.0.98.66:8002/listen.pls"},
+    {"n": "PR24",           "s":"http://stream3.polskieradio.pl:8480/listen.pls"},
+    {"n": "Szczecin Plus",  "s":"http://waw01-01.ic.smcdn.pl:8000/4260-1.aac.m3u"},
+    {"n": "Szczecin Eska",  "s":"http://waw01-01.ic.smcdn.pl:8000/2260-1.aac.m3u"}
+],
+"ampli":[
+ {"n": "SwissClassic",  "a":"2"},
+ {"n": "ClassicFM",     "a":"2"} 
+]
+}
