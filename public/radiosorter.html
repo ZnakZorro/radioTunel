@@ -33,6 +33,8 @@
 		cursor:move!important;
 	}
     #kosz,.klawisze {width:100%; min-height:4em; background-color: #9bf;} 
+    .active {background-color: red!important;}
+    .active {background-color: gold!important;}
 </style>
 <script>
 const zapisz=()=>{
@@ -85,17 +87,19 @@ if (localStorage.getItem("streamsDEF")){
         let stacje = document.getElementById("stacje");
         stacje.innerHTML = html; 
 }
-    var lis = document.querySelectorAll("li");
-    var ul = document.querySelector("ul");
-    var obj;
-    var initX, initY, firstX, firstY;
-    var arr = [].slice.call(lis);
-    var a = -1,
+let kosz = document.getElementById("kosz");
+
+    let lis = document.querySelectorAll("li");
+    let ul = document.querySelector("ul");
+    let obj;
+    let initX, initY, firstX, firstY;
+    let arr = [].slice.call(lis);
+    let a = -1,
       b = -1;
-    var intercambiabilidad = 0;
+    let intercambiabilidad = 0;
     function indexar(arr) {
       (a = -1), (b = -1);
-      var indice = 0;
+      let indice = 0;
       arr.forEach(function (li) {
         li.setAttribute("indice", indice);
         indice++;
@@ -103,9 +107,9 @@ if (localStorage.getItem("streamsDEF")){
       });
     }
     function dumpCSSText(element) {
-      var s = "";
-      var o = getComputedStyle(element);
-      for (var i = 0; i < o.length; i++) {
+      let s = "";
+      let o = getComputedStyle(element);
+      for (let i = 0; i < o.length; i++) {
         s += o[i] + ":" + o.getPropertyValue(o[i]) + ";";
       }
       return s;
@@ -117,7 +121,7 @@ if (localStorage.getItem("streamsDEF")){
           e.preventDefault();
           e.stopPropagation();
           intercambiabilidad = 1;
-          var clon = ref.cloneNode(1);
+          let clon = ref.cloneNode(1);
           clon.style.cssText = dumpCSSText(ref);
           ul.insertBefore(clon, ref);
           ref.style.position = "absolute";
@@ -137,6 +141,7 @@ if (localStorage.getItem("streamsDEF")){
             function () {
               this.removeEventListener("mousemove", dragIt, false);
               intercambiar();
+
             },
             false
           );
@@ -149,7 +154,7 @@ if (localStorage.getItem("streamsDEF")){
           e.preventDefault();
           e.stopPropagation();
           intercambiabilidad = 1;
-          var clon = ref.cloneNode(1);
+          let clon = ref.cloneNode(1);
           clon.style.cssText = dumpCSSText(ref);
           ul.insertBefore(clon, ref);
           ref.style.position = "absolute";
@@ -161,7 +166,7 @@ if (localStorage.getItem("streamsDEF")){
           a = obj.getAttribute("indice");
           initX = this.offsetLeft;
           initY = this.offsetTop;
-          var touch = e.touches;
+          let touch = e.touches;
           firstX = touch[0].pageX;
           firstY = touch[0].pageY;
           obj.addEventListener("touchmove", swipeIt, false);
@@ -170,6 +175,7 @@ if (localStorage.getItem("streamsDEF")){
             function () {
               this.removeEventListener("touchmove", swipeIt, false);
               intercambiar();
+              console.log(this)
             },
             false
           );
@@ -178,14 +184,20 @@ if (localStorage.getItem("streamsDEF")){
       );
     }
     function checkSuperposicion() {
+        let yy = parseInt(obj.style.top);
+        if (yy<-90){
+            //console.log(obj.style.left,parseInt(obj.style.top),obj.textContent)
+            kosz.classList.add("active")
+        } else kosz.classList.remove("active");
+        //console.log(obj)
       b = -1;
       arr.forEach(function (li) {
-        var ow = li.offsetWidth / 2;
-        var oh = li.offsetHeight / 2;
-        var x = li.offsetLeft + ow;
-        var y = li.offsetTop + oh;
-        var x2 = obj.offsetLeft + ow;
-        var y2 = obj.offsetTop + oh;
+        let ow = li.offsetWidth / 2;
+        let oh = li.offsetHeight / 2;
+        let x = li.offsetLeft + ow;
+        let y = li.offsetTop + oh;
+        let x2 = obj.offsetLeft + ow;
+        let y2 = obj.offsetTop + oh;
         if (Math.abs(x - x2) <= ow && Math.abs(y - y2) <= oh) {
           li.style.opacity = 0.5;
           if (li.getAttribute("indice") != obj.getAttribute("indice"))
@@ -196,8 +208,8 @@ if (localStorage.getItem("streamsDEF")){
       });
     }
     function dragIt(e) {
-      var dist = initX + e.pageX - firstX;
-      var dist2 = initY + e.pageY - firstY;
+      let dist = initX + e.pageX - firstX;
+      let dist2 = initY + e.pageY - firstY;
       e.preventDefault();
       e.stopPropagation();
       obj.style.left = dist + "px";
@@ -205,9 +217,9 @@ if (localStorage.getItem("streamsDEF")){
       checkSuperposicion();
     }
     function swipeIt(e) {
-      var contact = e.touches;
-      var dist = initX + contact[0].pageX - firstX;
-      var dist2 = initY + contact[0].pageY - firstY;
+      let contact = e.touches;
+      let dist = initX + contact[0].pageX - firstX;
+      let dist2 = initY + contact[0].pageY - firstY;
       e.preventDefault();
       e.stopPropagation();
       obj.style.left = dist + "px";
@@ -215,6 +227,17 @@ if (localStorage.getItem("streamsDEF")){
       checkSuperposicion();
     }
     function intercambiar() {
+        /*qqqqqqqqqqqqqqqqqqqqqqqqqqq*/
+        let yy = parseInt(obj.style.top);
+        if (yy<-90){
+            console.log(obj.style.left,parseInt(obj.style.top),obj.textContent)
+            kosz.classList.add("active2");
+            delete obj;
+            return;
+        } else kosz.classList.remove("active2");        
+         /*qqqqqqqqqqqqqqqqqqqqqqqqqqq*/
+
+
       if (!intercambiabilidad) {
         return;
       }
@@ -222,8 +245,8 @@ if (localStorage.getItem("streamsDEF")){
       if (obj && obj.parentNode) obj.parentNode.removeChild(obj);
     
       arr = [].slice.call(document.querySelectorAll("li"));
-      var pa = arr[a];
-      var pb = arr[b];
+      let pa = arr[a];
+      let pb = arr[b];
       if (pa) {
         pa.style.opacity = 1;
       }
@@ -237,9 +260,9 @@ if (localStorage.getItem("streamsDEF")){
       renderizar();
     }
     function renderizar() {
-      var fragment = document.createDocumentFragment();
+      let fragment = document.createDocumentFragment();
       arr.forEach(function (li) {
-        var clon = li.cloneNode(1);
+        let clon = li.cloneNode(1);
         clon.style.opacity = 1;
         clon.style.cssText = dumpCSSText(li);
         fragment.appendChild(clon);
