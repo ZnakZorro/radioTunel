@@ -40,6 +40,7 @@
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
       text-decoration: none;
     }
+    button.def    {background-color: #369;   color: #fff;}
     button.gitt   {background-color: #2da44e;color: #fff;}  
     button.active {background-color: red!important;} 
     button.succ   {background-color: #13ce66;color: #fff;}
