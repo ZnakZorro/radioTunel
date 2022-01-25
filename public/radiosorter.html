@@ -53,6 +53,7 @@
     }    
     .active {background-color: red!important;}
     .active2 {background-color: gold!important;}
+    .bodyactive{background-color: navy!important;}
 </style>
 <script>
 const zapisz=()=>{
@@ -202,11 +203,18 @@ let kosz = document.getElementById("kosz");
       );
     }
     function checkSuperposicion() {
+        let xx = parseInt(obj.style.left);
         let yy = parseInt(obj.style.top);
-        if (yy<-90){
+        let deltaX = xx - initX;
+        //console.log(deltaX)
+        if (yy<-90 || deltaX>180){
             //console.log(obj.style.left,parseInt(obj.style.top),obj.textContent)
-            kosz.classList.add("active")
-        } else kosz.classList.remove("active");
+            kosz.classList.add("active");
+            document.body.classList.add("bodyactive");
+        } else {
+          kosz.classList.remove("active");
+          document.body.classList.remove("bodyactive");
+        }
         //console.log(obj)
       b = -1;
       arr.forEach(function (li) {
@@ -228,6 +236,7 @@ let kosz = document.getElementById("kosz");
     function dragIt(e) {
       let dist = initX + e.pageX - firstX;
       let dist2 = initY + e.pageY - firstY;
+      
       e.preventDefault();
       e.stopPropagation();
       obj.style.left = dist + "px";
@@ -251,13 +260,11 @@ let kosz = document.getElementById("kosz");
         { 
             let nr = obj.dataset.nr;
             let wybrane = document.querySelectorAll('[data-nr="'+nr+'"]');
-            //if (wybrane[0]) wybrane[0].style.display="none";
-            //if (wybrane[0]) wybrane[1].style.display="none";
             if (wybrane[0]) wybrane[0].remove();
             if (wybrane[0]) wybrane[1].remove();
-            
-            //
-            //console.log(wybrane);
+            kosz.classList.remove("active");
+            kosz.classList.remove("active2");
+            document.body.classList.remove("bodyactive");
         }
         //alert("Skasowano "+name+"!")
     }
@@ -265,9 +272,9 @@ let kosz = document.getElementById("kosz");
         let xx = parseInt(obj.style.left);
         let yy = parseInt(obj.style.top);
         let deltaX = xx - initX;
-        let deltaY = yy - initY;
+        //let deltaY = yy - initY;
         //console.log(xx,yy,initX,initY,deltaX,deltaY);
-        console.log(deltaX);
+        //console.log(deltaX);
         if (yy<-90 || deltaX>180){           
             kosz.classList.add("active2");
             kasujOBJ(obj);
@@ -300,6 +307,7 @@ let kosz = document.getElementById("kosz");
     function renderizar() {
       let fragment = document.createDocumentFragment();
       arr.forEach(function (li) {
+        //console.log(li.cloneNode(1));
         let clon = li.cloneNode(1);
         clon.style.opacity = 1;
         clon.style.cssText = dumpCSSText(li);
