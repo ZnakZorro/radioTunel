@@ -8,8 +8,9 @@
   <meta name="theme-color" content="#808">
   <link rel="shortcut icon" type="image/svg+xml" size="any" href="https://znakzorro.github.io/radioTunel/public/img/radio.svg">
   <link rel="stylesheet" href="https://znakzorro.github.io/radioTunel/public/css/cartoon.css" />
-  <script src="https://znakzorro.github.io/radioTunel/public/js/hnl.mobileConsole.js"></script>
+  <!--script src="https://znakzorro.github.io/radioTunel/public/js/hnl.mobileConsole.js"></script-->
 <style>
+  .wrapper {width:100%;}
   table {font-family:monospace; font-size: 11pt;}
   table,td,th {border:1px solid gray;}
   td,th {border:1px solid gray; padding:0.3em 0.5em;}
@@ -29,15 +30,15 @@ const $$=e=>document.querySelectorAll(e);
 const describe=(data,title="top",numer=0)=>{
   
   $("#div"+numer).innerHTML = "<h4>"+title+"</h4>";
-  let text = "<tr><th>lp</th><th>bit</th><th>click</th><th>name</th><th>url</th></tr>";
+  let text = "<tr><th>lp</th><th>bit</th><th>cedec</th><th>click</th><th>name</th><th>url</th></tr>";
   let j=1;
   data.forEach((d,i)=>{
     console.log(d);
     if (d.bitrate>32){
-        text += "<tr><td>"+j+"</td><td>"+d.bitrate+"</td><td>"+d.clickcount+"</td><td>"+d.name+"</td><td>"+d.url+"</td></tr>";
+        text += "<tr><td>"+j+"</td><td>"+d.bitrate+"</td><td>"+d.codec+"</td><td>"+d.clickcount+"</td><td>"+d.name+"</td><td>"+d.url+"</td></tr>";
         j++
     }
-
+    
   });
   $("#div"+numer).innerHTML += "<table>"+text+"</table>";
 }
@@ -79,7 +80,7 @@ document.addEventListener("DOMContentLoaded",function(){
 <body>
 
 <div style="width:100%;">
-    <div class="wrap">
+    <div class="wrapper">
       <div id="div0"></div>
       <div id="div1"></div>
       <div id="div2"></div>
