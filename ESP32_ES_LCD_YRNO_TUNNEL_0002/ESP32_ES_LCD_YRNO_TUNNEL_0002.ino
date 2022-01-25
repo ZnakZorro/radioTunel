@@ -68,8 +68,8 @@ unsigned long timerDelay15m = 1000 * 60 *15*3;  // 15minut * 3 = 45
 unsigned long lastTime = 0;
 unsigned long millisy = 0;
 
-String LCD_Buffer1="                ";
-String LCD_Buffer2="                ";
+String LCD_Buff_CoJestGrane="                ";
+String LCD_Buff_JakaStacja="                ";
 
 String jsonBuffer;
 int loopa=0;
@@ -78,6 +78,7 @@ char   znakS = (char)223;
 
 
 bool isSD        = false;
+const char* hostHOST ="http://stream.rcs.revma.com/ypqt40u0x1zuv";
 
 String hostURL = "http://stream.rcs.revma.com/ypqt40u0x1zuv";
 String hostNAME = "RNS";
@@ -85,6 +86,8 @@ String hostNAME = "RNS";
 char extraInfo[32];// = hostURL;
 
 char* indexPath = "/radioTunel/public/cartoon.html";
+char* radiosorter = "/radioTunel/public/radiosorter.html";
+
 
 WiFiMulti wifiMulti;
 ES8388 es;
@@ -113,25 +116,14 @@ String padZero(int nr){
 void pogoda2LCD(){
     String isRun = audio.isRunning() ? "play":"stop";
     //if (!audio.isRunning()) playCurStation();
-      
-      /*Serial.print("\n======================="); 
-      for (int n=0;n<7;n++) {
-          Serial.print("---"); Serial.print(n); Serial.print(" = "); Serial.println(clio.linieLCD[n]);
-      }*/
-      //Serial.print("1= "); Serial.println(clio.linieLCD[1]);
-      //Serial.print("2= "); Serial.println(clio.linieLCD[2]);
+      //Serial.println(loopa);
       clio.println(clio.linieLCD[loopa],1);
-      if (loopa==0) {
-          
-          clio.println(LCD_Buffer1,1);
-          //clio.println(LCD_Buffer2,0);
-      }
-      //if (loopa==1) clio.println(LCD_Buffer1,0);
-      //if (loopa==2) clio.println(LCD_Buffer2,0);
+      if (loopa==0) {clio.println(LCD_Buff_JakaStacja,0);}
       if (loopa==2) clio.println(clio.getClock(),0);
-      
+      if (loopa==4) {clio.println(LCD_Buff_CoJestGrane,0);}
+      if (loopa==6) clio.println(clio.getClock(),0);
         
-      loopa = (loopa+1) % 7;      
+      loopa = (loopa+1) % 7;   //0,1,2,3,4,5,6   
 }
 
 
@@ -182,15 +174,25 @@ void savePreferences(){
          preferences.putUInt("cur_volume", cur_volume);
          preferences.putUInt("cur_station", cur_station);
          preferences.putUInt("cur_equalizer", cur_equalizer);  
-         preferences.putString("hostURL", hostURL);     
+         preferences.putString("hostURL", hostURL);
+         preferences.putString("hostNAME", hostNAME);     
          preferences.end();
-         LCD_Buffer1 = "Vol="+String(cur_volume) + ", Sta="+String(cur_station);
+         LCD_Buff_JakaStacja = "Vol="+String(cur_volume) + ", "+String(hostNAME);
 }  
   
 void es_volume(int volum){
     es.volume(ES8388::ES_MAIN, volum);
     es.volume(ES8388::ES_OUT1, volum);
     es.volume(ES8388::ES_OUT2, volum);
+    if (volum==0){
+        es.mute(ES8388::ES_OUT1, true);
+        es.mute(ES8388::ES_OUT2, true);
+        es.mute(ES8388::ES_MAIN, true);
+    } else {
+        es.mute(ES8388::ES_OUT1, false);
+        es.mute(ES8388::ES_OUT2, false);
+        es.mute(ES8388::ES_MAIN, false);      
+    }
 }
 
 unsigned long millisTEST = 0;
@@ -208,10 +210,12 @@ void audioStop(){
 void audioStart(){
     Serial.println("#201 audioStart"); 
     //Serial.println(millis() - millisTEST); 
-    audio.connecttohost(hostURL.c_str()); 
+    //hostHOST      = hostURL.c_str();  
+    audio.connecttohost(hostHOST); 
+    //audio.connecttohost(hostURL.c_str()); 
     es_volume(start_volume);
     audio.setVolume(cur_volume);
-    LCD_Buffer2 = hostNAME;
+    LCD_Buff_JakaStacja = hostNAME;
     Serial.print("millis=");Serial.println(millis() - millisTEST);
     Serial.print("isRun =");Serial.println(audio.isRunning());
 }
@@ -231,6 +235,7 @@ void setup()
           cur_volume    = preferences.getUInt("cur_volume", cur_volume_DEF);
           cur_equalizer = preferences.getUInt("cur_equalizer", 0);
           hostURL       = preferences.getString("hostURL","http://pl-play.adtonos.com/tok-fm");
+          hostHOST = hostURL.c_str();
           Serial.println("#224 preferences.hostURL==="); 
           Serial.println(hostURL); 
           Serial.println(" ===========");
@@ -292,9 +297,6 @@ void setup()
     }
     Serial.printf("OK\n");
     es_volume(0);   
-    es.mute(ES8388::ES_OUT1, false);
-    es.mute(ES8388::ES_OUT2, false);
-    es.mute(ES8388::ES_MAIN, false);
 
     // Enable amplifier
     pinMode(GPIO_PA_EN, OUTPUT);
@@ -312,9 +314,11 @@ void setup()
       //audio.connecttoFS(SPIFFS, "/r.mp3");
       //playCurStation();
       LastTimerSLEEP = millis();
-      snprintf(extraInfo, 32, hostURL.c_str());
+      snprintf(extraInfo, 32, hostHOST);
       installServer();
-      LCD_Buffer1 = "Vol="+String(cur_volume) + ", Sta="+String(cur_station);
+      //LCD_Buff_JakaStacja = "Vol="+String(cur_volume) + ", Sta="+String(cur_station);
+      LCD_Buff_JakaStacja = "%"+String(cur_volume) + ", "+String(hostNAME);
+      clio.println(LCD_Buff_JakaStacja,0);
 }
 // setup end ----------------------------------------------------------------------------------------------------------------------
 
@@ -392,24 +396,24 @@ void audio_eof_mp3(const char *info){  //end of file
     //playCurStation();
 }
 void audio_showstation(const char *info){
-  snprintf(extraInfo, 32, info);
-    onScreens("audio_showstation::",String(info).c_str(),384);
-    //LCD_Buffer1 = String(info).substring(0,16);
-    //LCD_Buffer2 = String(info).substring(16,32);
+  //snprintf(extraInfo, 32, info);
+    //onScreens("audio_showstation::",String(info).c_str(),387);
+    //LCD_Buff_CoJestGrane = String(info).substring(0,16);
+    //LCD_Buff_JakaStacja = String(info).substring(16,32);
     es_volume(start_volume);
 }
 void audio_showstreaminfo(const char *info){
   snprintf(extraInfo, 32, info);
     //Serial.print("streaminfo  ");Serial.println(info);
-    onScreens("streaminfo::",String(info).c_str(),392);
-    //LCD_Buffer1 = String(info).substring(0,16);
-    //LCD_Buffer2 = String(info).substring(16,32);
+    onScreens("streaminfo::",String(info).c_str(),395);
+    //LCD_Buff_CoJestGrane = String(info).substring(0,16);
+    //LCD_Buff_JakaStacja = String(info).substring(16,32);
 }
 void audio_showstreamtitle(const char *info){
   snprintf(extraInfo, 32, info);
-  LCD_Buffer1 = String(info).substring(0,16);
+  LCD_Buff_JakaStacja = String(info).substring(0,16);
     //Serial.print("streamtitle ");Serial.println(info);
-    onScreens("Streamtitle::",String(info).c_str(),399);
+    onScreens("Streamtitle::",String(info).c_str(),403);
 }
 void audio_bitrate(const char *info){
     Serial.print("bitrate     ");Serial.println(info);
@@ -422,7 +426,7 @@ void audio_icyurl(const char *info){  //homepage
 }
 void audio_lasthost(const char *info){  //stream URL played
     //Serial.print("lasthost    ");Serial.println(info);
-    onScreens("Lasthost::",String(info).c_str(),412);
+    onScreens("Lasthost::",String(info).c_str(),416);
 }
 void audio_eof_speech(const char *info){
     Serial.print("eof_speech  ");Serial.println(info);
@@ -437,8 +441,9 @@ String getRadioInfo(){
   String n = String(cur_station);
   String s = hostNAME;    //String(clio.radia[cur_station].info);
   String ri    = String(WiFi.RSSI());
-    LCD_Buffer1 = extraInfo;
-    //LCD_Buffer2 = s;
+    LCD_Buff_CoJestGrane = extraInfo;
+    LCD_Buff_JakaStacja = "%%"+String(cur_volume) + ", "+String(hostNAME);
+    //LCD_Buff_JakaStacja = s;
     String czas = String((timerSLEEP/(1000*60)));
   return n+sep+v+sep+ri+sep+s+sep+String(extraInfo)+sep+q+sep+czas+sep+hostURL;
 /*
@@ -460,16 +465,7 @@ void setCurVolume(){
     //int ampli = clio.radia[cur_station].ampli;
     //if (cur_volume<2) ampli = 0;
     audio.setVolume(cur_volume); // 0...21
-    Serial.println("#464 ?????Vol="+String(cur_volume));
-    //LCD_Buffer2 = "Vol="+String(cur_volume);
-    //LCD_Buffer2 = "Sta="+String(cur_station);
-    //clio.println(LCD_Buffer1,0);
-        //clio.drukLCD("Vol="+String(cur_volume));
-        //String  printext = String(cur_volume);
-        //printext = "Vol="+printext;
-        //clio.println(printext,0);
-        //clio.println(printext.c_str(),1);
-        //clio.drukLCD(printext);
+    Serial.println("#464 ?????Vol="+String(cur_volume));  
     savePreferences();
 }
 
@@ -484,6 +480,39 @@ void audio_ChangeVolume(String ParamValue){
 }
 
 
+//#define isint(X) (!((X)==(X)))
+
+void audio_SetStationUrl(const String ParamValue){
+  //Serial.println("\n#494 xxxxxxxxxxxxxxxxxxx"); 
+  LastTimerSLEEP = millis()-60000;
+    audioStop();
+        hostURL = ParamValue;
+        hostHOST = hostURL.c_str();
+        //Serial.println("#498 audio_SetStationUrl hostURL==="); 
+        Serial.println(hostURL); 
+        savePreferences(); 
+    audioStart();
+
+}
+
+void audio_ChangeStation(String ParamValue){ 
+    //Serial.println("#496 audio_ChangeStation sssssssssssssss");
+    //Serial.println(ParamValue);
+    cur_station = ParamValue.toInt();
+    preferences.begin("my-app", false);
+      String keyName = "sName" + ParamValue;
+      String keyUrl  = "sUrl"  + ParamValue;
+      String sName  = preferences.getString(keyName.c_str(),"tok-fm");
+      String hostURL= preferences.getString(keyUrl.c_str(),"http://pl-play.adtonos.com/tok-fm");
+      hostHOST      = hostURL.c_str();
+      //Serial.print("#521 sName=");  Serial.print(sName);  Serial.print(" sUrl= "); Serial.println(hostURL);
+      //Serial.print("#522 hostHOST=");   Serial.println(hostHOST);
+      //hostURL = sUrl;
+      hostNAME = sName;
+    preferences.end();
+    audio_SetStationUrl(hostURL);    
+}
+
 void audio_SetIncreaseStation(int delta){
     cur_station += delta;
     if (cur_station<0) cur_station=LAST_STATION;
@@ -491,49 +520,6 @@ void audio_SetIncreaseStation(int delta){
     Serial.print("#467 cur_station=");Serial.println(cur_station);
     audio_ChangeStation(String(cur_station));
     //playCurStation(); ---usun ---won
-}
-
-//#define isint(X) (!((X)==(X)))
-
-void audio_SetStationUrl(const String ParamValue){
-  Serial.println("#575 xxxxxxxxxxxxxxxxxxx---won"); 
-        hostURL = ParamValue;
-        
-          Serial.println("#478 audio_SetStationUrl hostURL==="); 
-          Serial.println(hostURL); 
-
-      //onScreens(("Url="+String(ParamValue)),483);
-      audio.stopSong();
-      es_volume(0);
-      audio.setVolume(0);
-      delay(333);
-      audio.connecttohost(ParamValue.c_str());
-      audio.setVolume(cur_volume);
-      es_volume(start_volume);
-      savePreferences();   
-}
-
-void audio_ChangeStation(String ParamValue){
-    audioStop();
-    
-    LastTimerSLEEP = millis()-60000;
-    Serial.println("#496 audio_ChangeStation.............");
-    Serial.println(ParamValue);
-    cur_station = ParamValue.toInt();
-          preferences.begin("my-app", false);
-            String keyName = "sName" + ParamValue;
-            String keyUrl  = "sUrl"  + ParamValue;
-            String sName  = preferences.getString(keyName.c_str(),"tok-fm");
-            String sUrl   = preferences.getString(keyUrl.c_str(),"http://pl-play.adtonos.com/tok-fm");
-            Serial.print("#504 sName=");  Serial.print(sName);  Serial.print(" sUrl= "); Serial.println(sUrl);
-            hostURL = sUrl;
-            hostNAME = sName;
-          preferences.end();
-        savePreferences();
-        //clio.drukLCD("Sta="+String(cur_station));
-        //clio.println("Sta="+String(cur_station),0);
-        //LCD_Buffer2 = "Sta="+String(cur_station);
-      audioStart();
 }
 
 void audio_SetEQNr(String ParamValue){
@@ -560,7 +546,7 @@ void ESP_sleep_za(const String ParamValue){
     timerSLEEP = newTime * 60 *1000;
     Serial.println("#535 new Sleep "+String(timerSLEEP));
     //clio.println("Sleep "+String(ParamValue),1);
-    LCD_Buffer2="Sleep "+String(ParamValue);
+    LCD_Buff_JakaStacja="Sleep "+String(ParamValue);
 }
 
 void esp_reBootSleep(const String ParamValue){
@@ -598,9 +584,25 @@ void installServer(){
   Serial.println(indexPath);
   server.rewrite( "/", indexPath) ;
   server.rewrite( "/index.html", indexPath);
+  server.rewrite( "/radiosorter", radiosorter) ;
+  server.rewrite( "/radiosorter.html", radiosorter);
+
+  
 
    // tunnel the index.html request 
   server.on(indexPath, HTTP_GET, [&](AsyncWebServerRequest *request){
+    audioStop();
+      ClientRequestTunnel tunnel; 
+      if (tunnel.open("https://znakzorro.github.io", request->url())) {
+          String result = tunnel.getString();
+          request->send(200, "text/html", result); 
+          audioStart();       
+      } else {
+          request->send(tunnel.getHttpCode());
+      }
+  });
+   // tunnel the index.html request 
+  server.on(radiosorter, HTTP_GET, [&](AsyncWebServerRequest *request){
     audioStop();
       ClientRequestTunnel tunnel; 
       if (tunnel.open("https://znakzorro.github.io", request->url())) {
@@ -673,26 +675,27 @@ void installServer(){
           //Serial.print("#705 get? ");Serial.print(i); Serial.print(". ");Serial.print(p->name().c_str()); Serial.print("="); Serial.println(p->value().c_str());
           
           String ParamName  = String(p->name());
-          String ParamValue = p->value();               
-         Serial.print("#651 ");Serial.print(ParamName);Serial.print("=");Serial.println(ParamValue);
-         
-           if (ParamName=="start") {audio.pauseResume();}
-           if (ParamName=="v")  audio_ChangeVolume(ParamValue);  
-           if (ParamName=="s")  audio_ChangeStation(ParamValue); 
-           //if (ParamName=="t")  audio_SetStationNr(ParamValue);
-           if (ParamName=="q")  audio_SetEQNr(ParamValue);
-           if (ParamName=="qq")  audio_SetEQ(ParamValue);
-           //if (ParamName=="z")  saveDATA(ParamValue); 
-           if (ParamName=="x")  audio_SetStationUrl(ParamValue);
-           if (ParamName=="r")  {esp_reBootSleep(ParamValue);}
-           if (ParamName=="y")  ESP_sleep_za(ParamValue);
-           //if (ParamName=="a")  saveStation2Preferences(ParamValue);
-           if (ParamName=="nx")  audio_SetIncreaseStation(1);
-           if (ParamName=="pr")  audio_SetIncreaseStation(-1);
+          String ParamValue = p->value(); 
+          if (ParamName != "n") {             
+                Serial.print("#685 ");Serial.print(ParamName);Serial.print("=");Serial.println(ParamValue);
+          }
+           if (ParamName=="start")  audio.pauseResume();
+           if (ParamName=="v")      audio_ChangeVolume(ParamValue);  
+           if (ParamName=="s")      audio_ChangeStation(ParamValue);          
+           if (ParamName=="q")      audio_SetEQNr(ParamValue);
+           if (ParamName=="qq")     audio_SetEQ(ParamValue);           
+           if (ParamName=="x")      audio_SetStationUrl(ParamValue);
+           if (ParamName=="r")      esp_reBootSleep(ParamValue);
+           if (ParamName=="y")      ESP_sleep_za(ParamValue);           
+           if (ParamName=="nx")     audio_SetIncreaseStation(1);
+           if (ParamName=="pr")     audio_SetIncreaseStation(-1);
            
-            if (ParamName=="n") {  }
+           //if (ParamName=="t")    audio_SetStationNr(ParamValue);
+           //if (ParamName=="z")    saveDATA(ParamValue); 
+           //if (ParamName=="a")    saveStation2Preferences(ParamValue);
+           //if (ParamName=="n")    {  }
            
-                     
+         /*          
            if (ParamName=="mp3")  {
                 //playMp3(ParamValue);
            }
@@ -705,9 +708,8 @@ void installServer(){
          // prog mem prog mem prog mem prog mem prog mem prog mem
            if (ParamName=="iir") {
             //zapiszSPIFFS("/eq.txt",p->value().c_str());
-            
           } 
-
+        */
     }
  
     request->send(200, "text/plain",getRadioInfo());
@@ -725,6 +727,7 @@ void installServer(){
   //initWebSocket(); 
   Serial.println("#700 Start SERVER");
   //audio.connecttohost(hostURL.c_str());
+  
   // po uruchomieniu servera
   audioStart();
 }
@@ -734,6 +737,8 @@ void installServer(){
 Szkic używa 1 256 946 bajtów (39%) pamięci programu. Maksimum to 3145728 bajtów.
 Zmienne globalne używają 52 636 bajtów (16%) pamięci dynamicznej, pozostawiając 275044 bajtów dla zmiennych lokalnych. Maksimum to 327680 bajtów.
 
-
+Szkic używa 1 257 182 bajtów (39%) pamięci programu. Maksimum to 3145728 bajtów.
+Zmienne globalne używają 52 652 bajtów (16%) pamięci dynamicznej, pozostawiając 275028 bajtów dla zmiennych lokalnych. Maksimum to 327680 bajtów.
+e
 
  */
