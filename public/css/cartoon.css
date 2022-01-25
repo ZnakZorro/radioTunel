@@ -61,7 +61,7 @@
         padding: 0.2em;
         /*box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); */
       }
-    div.sm button {font-size:0.75em;margin:0.2em 0.1em; padding: 0.65em 0.25em;background:#842;}
+    div.sm button {font-size:0.75em;margin:0.2em 0.1em; padding: 0.65em 0.25em;}
     div.admi button {background-color: orange;color: #000; min-width:7.1em;}
     div.bg {background-color: whitesmoke; margin: 0.75em 0; padding: 1em 0;}
     div.add {}
