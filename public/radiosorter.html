@@ -18,6 +18,14 @@
 		/*background: linear-gradient(to right, #ACBB78, #F7F8F8); */
         background-color: #000;
 	}
+  div {margin:0!important; padding:0!important;}
+  .wrap {
+    margin: auto;
+    z-index: 2;
+    margin: auto;
+    padding: 0.35rem;
+    max-width: 100%!important;
+}
 	ul{
 		margin:2em auto;
 		position:relative;	
@@ -33,15 +41,15 @@
 		cursor:move!important;
 	}
     #kosz,.klawisze {
-        width: 100%;
-        display: grid;
-        min-height: 4em;
-        background-color: #9bf;
-        align-content: space-around;
-        justify-content: space-evenly;        
+    width: 100%;
+    display: flex;
+    min-height: 4em;
+    background-color: #9bf;
+    justify-content: space-around;
+    align-items: center;      
     } 
     button.info, .button.info {
-        min-width: 12em!important;
+        width: 220px!important;
     }    
     .active {background-color: red!important;}
     .active2 {background-color: gold!important;}
@@ -248,16 +256,19 @@ let kosz = document.getElementById("kosz");
             if (wybrane[0]) wybrane[0].remove();
             if (wybrane[0]) wybrane[1].remove();
             
-            //console.log(nr);
+            //
             //console.log(wybrane);
         }
         //alert("Skasowano "+name+"!")
     }
-    function intercambiar() {
-        
+    function intercambiar() {        
+        let xx = parseInt(obj.style.left);
         let yy = parseInt(obj.style.top);
-        if (yy<-90){
-            
+        let deltaX = xx - initX;
+        let deltaY = yy - initY;
+        //console.log(xx,yy,initX,initY,deltaX,deltaY);
+        console.log(deltaX);
+        if (yy<-90 || deltaX>180){           
             kosz.classList.add("active2");
             kasujOBJ(obj);
             return;
