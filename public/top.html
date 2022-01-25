@@ -55,9 +55,10 @@ let getAsyncFetch=async(u,callback=null,title="top",numer=0)=>{
 let jsonurl="https://jsonplaceholder.typicode.com/todos"
 
 let topy =[
-  "https://de1.api.radio-browser.info/json/stations/topvote/15",
-  "https://de1.api.radio-browser.info/json/stations/topclick/15",
-  "https://de1.api.radio-browser.info/json/stations/lastclick/15",
+  "https://de1.api.radio-browser.info/json/stations/topvote/20",
+  "https://de1.api.radio-browser.info/json/stations/topclick/20",
+  "https://de1.api.radio-browser.info/json/stations/lastclick/20",
+  "https://de1.api.radio-browser.info/json/stations/lastchange/20",
   "https://de1.api.radio-browser.info/json/stations/bytag/baroque"
  
 ]
@@ -67,10 +68,11 @@ let urlPoland = "https://de1.api.radio-browser.info/json/stations/bycountry/pola
 
 
 document.addEventListener("DOMContentLoaded",function(){
-  getAsyncFetch(topy[0],describe,"topvote/15",0);
-  getAsyncFetch(topy[1],describe,"topclick/15",1);
-  getAsyncFetch(topy[2],describe,"lastclick/15",2);
-  getAsyncFetch(topy[3],describe,"baroque",3);
+  getAsyncFetch(topy[0],describe,"topvote/20",0);
+  getAsyncFetch(topy[1],describe,"topclick/20",1);
+  getAsyncFetch(topy[2],describe,"lastclick/20",2);
+  getAsyncFetch(topy[2],describe,"lastchange/20",3);
+  getAsyncFetch(topy[3],describe,"baroque",4);
 });
 </script>
 </head>
