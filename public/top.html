@@ -1,0 +1,99 @@
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>TOP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="HandheldFriendly" content="true">
+  <meta name="mobile-web-app-capable" content="yes"> 
+  <meta name="theme-color" content="#808">
+  <link rel="shortcut icon" type="image/svg+xml" size="any" href="https://znakzorro.github.io/radioTunel/public/img/radio.svg">
+  <link rel="stylesheet" href="https://znakzorro.github.io/radioTunel/public/css/cartoon.css" />
+  <script src="https://znakzorro.github.io/radioTunel/public/js/hnl.mobileConsole.js"></script>
+<style>
+  table {font-family:monospace; font-size: 11pt;}
+  table,td,th {border:1px solid gray;}
+  td,th {border:1px solid gray; padding:0.3em 0.5em;}
+  table {width:100%;}
+</style>
+<script>
+const $=e=>document.querySelector(e);
+const $$=e=>document.querySelectorAll(e);
+
+/*fetch(u)
+.then(r => {return r.json()})
+.then(o => {console.log(o)})
+.catch(e => {console.log(e)})
+*/
+
+
+const describe=(data,title="top",numer=0)=>{
+  
+  $("#div"+numer).innerHTML = "<h4>"+title+"</h4>";
+  let text = "<tr><th>lp</th><th>bit</th><th>click</th><th>name</th><th>url</th></tr>";
+  let j=1;
+  data.forEach((d,i)=>{
+    console.log(d);
+    if (d.bitrate>32){
+        text += "<tr><td>"+j+"</td><td>"+d.bitrate+"</td><td>"+d.clickcount+"</td><td>"+d.name+"</td><td>"+d.url+"</td></tr>";
+        j++
+    }
+
+  });
+  $("#div"+numer).innerHTML += "<table>"+text+"</table>";
+}
+
+let getAsyncFetch=async(u,callback=null,title="top",numer=0)=>{
+  const config = {
+    headers: {'Accept':'application/json'}
+  }
+  const res = await fetch(u,config)
+  const data = await res.json()
+  //console.log(data);
+  if (callback) callback(data,title,numer);
+}
+  
+let jsonurl="https://jsonplaceholder.typicode.com/todos"
+
+let topy =[
+  "https://de1.api.radio-browser.info/json/stations/topvote/15",
+  "https://de1.api.radio-browser.info/json/stations/topclick/15",
+  "https://de1.api.radio-browser.info/json/stations/lastclick/15",
+  "https://de1.api.radio-browser.info/json/stations/bytag/baroque"
+ 
+]
+
+let urlPoland = "https://de1.api.radio-browser.info/json/stations/bycountry/poland";
+
+
+
+document.addEventListener("DOMContentLoaded",function(){
+  getAsyncFetch(topy[0],describe,"topvote/15",0);
+  getAsyncFetch(topy[1],describe,"topclick/15",1);
+  getAsyncFetch(topy[2],describe,"lastclick/15",2);
+  getAsyncFetch(topy[3],describe,"baroque",3);
+});
+</script>
+</head>
+<body>
+
+<div style="width:100%;">
+    <div class="wrap">
+      <div id="div0"></div>
+      <div id="div1"></div>
+      <div id="div2"></div>
+      <div id="div3"></div>
+      <div id="div4"></div>
+      <div id="div5"></div>
+        
+    </div>
+    <div class="wrap klawisze">
+        
+    </div>
+</div>
+
+<script>
+
+</script>
+    
+</body>
+</html>
