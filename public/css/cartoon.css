@@ -32,9 +32,8 @@
     button,.button {
       padding: 0.75em;
       border: 1px;
-      background-color: #00bcbe;
-      text-decoration: none;
-      color: #fff;
+      background-color: #3cf;  
+      color: #000;
       margin:0.2em;
       border-radius: 0.8em;
       font-size: 12pt; 
@@ -42,7 +41,7 @@
       cursor: pointer;
       min-width: 4.75em;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-     
+      text-decoration: none;
     }
     button.gitt   {background-color: #2da44e;color: #fff;}  
     button.active {background-color: red!important;} 
