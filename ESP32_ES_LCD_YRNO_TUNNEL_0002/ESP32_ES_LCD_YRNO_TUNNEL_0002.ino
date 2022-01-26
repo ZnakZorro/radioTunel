@@ -81,7 +81,7 @@ bool isSD        = false;
 const char* hostHOST ="http://stream.rcs.revma.com/ypqt40u0x1zuv";
 
 String hostURL = "http://stream.rcs.revma.com/ypqt40u0x1zuv";
-String hostNAME = "RNS";
+String hostNAME = "???";
 
 char extraInfo[32];// = hostURL;
 
@@ -177,7 +177,7 @@ void savePreferences(){
          preferences.putString("hostURL", hostURL);
          preferences.putString("hostNAME", hostNAME);     
          preferences.end();
-         LCD_Buff_JakaStacja = "Vol="+String(cur_volume) + ", "+String(hostNAME);
+         LCD_Buff_JakaStacja = "V="+String(cur_volume) + ", "+String(hostNAME);
 }  
   
 void es_volume(int volum){
@@ -202,8 +202,7 @@ void audioStop(){
     es_volume(0);
     audio.setVolume(0);
     audio.stopSong();
-    Serial.println(audio.isRunning());
-    
+    Serial.println(audio.isRunning());   
     millisTEST = millis();
 }
 
@@ -215,7 +214,7 @@ void audioStart(){
     //audio.connecttohost(hostURL.c_str()); 
     es_volume(start_volume);
     audio.setVolume(cur_volume);
-    LCD_Buff_JakaStacja = hostNAME;
+    LCD_Buff_JakaStacja = "V="+String(cur_volume) + ", "+String(hostNAME);
     Serial.print("millis=");Serial.println(millis() - millisTEST);
     Serial.print("isRun =");Serial.println(audio.isRunning());
 }
@@ -235,6 +234,7 @@ void setup()
           cur_volume    = preferences.getUInt("cur_volume", cur_volume_DEF);
           cur_equalizer = preferences.getUInt("cur_equalizer", 0);
           hostURL       = preferences.getString("hostURL","http://pl-play.adtonos.com/tok-fm");
+          hostNAME      = preferences.getString("hostNAME","!!!");
           hostHOST = hostURL.c_str();
           Serial.println("#224 preferences.hostURL==="); 
           Serial.println(hostURL); 
@@ -315,9 +315,8 @@ void setup()
       //playCurStation();
       LastTimerSLEEP = millis();
       snprintf(extraInfo, 32, hostHOST);
-      installServer();
-      //LCD_Buff_JakaStacja = "Vol="+String(cur_volume) + ", Sta="+String(cur_station);
-      LCD_Buff_JakaStacja = "%"+String(cur_volume) + ", "+String(hostNAME);
+      installServer();     
+      LCD_Buff_JakaStacja = "v="+String(cur_volume) + ", "+String(hostNAME);
       clio.println(LCD_Buff_JakaStacja,0);
 }
 // setup end ----------------------------------------------------------------------------------------------------------------------
@@ -411,7 +410,7 @@ void audio_showstreaminfo(const char *info){
 }
 void audio_showstreamtitle(const char *info){
   snprintf(extraInfo, 32, info);
-  LCD_Buff_JakaStacja = String(info).substring(0,16);
+  LCD_Buff_CoJestGrane = String(info).substring(0,16);
     //Serial.print("streamtitle ");Serial.println(info);
     onScreens("Streamtitle::",String(info).c_str(),403);
 }
@@ -442,7 +441,7 @@ String getRadioInfo(){
   String s = hostNAME;    //String(clio.radia[cur_station].info);
   String ri    = String(WiFi.RSSI());
     LCD_Buff_CoJestGrane = extraInfo;
-    LCD_Buff_JakaStacja = "%%"+String(cur_volume) + ", "+String(hostNAME);
+    LCD_Buff_JakaStacja = "VV"+String(cur_volume) + ", "+String(hostNAME);
     //LCD_Buff_JakaStacja = s;
     String czas = String((timerSLEEP/(1000*60)));
   return n+sep+v+sep+ri+sep+s+sep+String(extraInfo)+sep+q+sep+czas+sep+hostURL;
@@ -486,7 +485,7 @@ void audio_SetStationUrl(const String ParamValue){
   //Serial.println("\n#494 xxxxxxxxxxxxxxxxxxx"); 
   LastTimerSLEEP = millis()-60000;
     audioStop();
-        hostURL = ParamValue;
+        hostURL = ParamValue.trim();
         hostHOST = hostURL.c_str();
         //Serial.println("#498 audio_SetStationUrl hostURL==="); 
         Serial.println(hostURL); 
