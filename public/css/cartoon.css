@@ -88,7 +88,7 @@
       transition: all 1s ease-in-out;
       padding:0;
     }
-    #state:checked ~ .acordion { max-height: 120vh;}
+    #state:checked ~ .acordion { max-height: 160vh;}
 
    
   .fileUpload {
