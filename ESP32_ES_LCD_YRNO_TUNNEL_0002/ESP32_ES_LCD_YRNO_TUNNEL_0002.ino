@@ -481,11 +481,11 @@ void audio_ChangeVolume(String ParamValue){
 
 //#define isint(X) (!((X)==(X)))
 
-void audio_SetStationUrl(const String ParamValue){
+void audio_SetStationUrl(String ParamValue){
   //Serial.println("\n#494 xxxxxxxxxxxxxxxxxxx"); 
   LastTimerSLEEP = millis()-60000;
     audioStop();
-        hostURL = ParamValue.trim();
+        hostURL = ParamValue;
         hostHOST = hostURL.c_str();
         //Serial.println("#498 audio_SetStationUrl hostURL==="); 
         Serial.println(hostURL); 
