@@ -1,0 +1,73 @@
+
+
+<style>
+  
+  
+  
+  
+ <style />
+  
+
+
+
+
+<div class="container">
+  <h3>CSS Pseudo Element Abuse -  Glow Buttons</h3>
+  <ul class="Nav MainNav">
+    <li class="MainNav-Button MainNav-Button_LeftOfActive"><a href="#">1</a></li>
+    <li class="MainNav-Button MainNav-Button_Active"><a href="#">2</a></li>
+    <li class="MainNav-Button MainNav-Button_RightOfActive"><a href="#">3</a></li>
+  </ul>
+
+  <hr>
+  <h3><a href="http://dribbble.com/shots/711443-Light-Dark?list=likes" class="TextLink" target="_blank">Original Static Dribbble Shot</a></h3>
+
+  <div style="background:url('https://dribbble.s3.amazonaws.com/users/121011/screenshots/711443/attachments/66290/Light_Dark-bigger.png') no-repeat -678px -180px; width:446px; height:86px; margin:0 auto;"></div>
+  
+  <hr>
+  <!--small-->
+  <h3>Build with EMs can be scaled down</h3>
+  <ul class="Nav Nav_Small MainNav">
+    <li class="MainNav-Button MainNav-Button_LeftOfActive"><a href="#">1</a></li>
+    <li class="MainNav-Button MainNav-Button_Active"><a href="#">2</a></li>
+    <li class="MainNav-Button MainNav-Button_RightOfActive"><a href="#">3</a></li>
+    <li class="MainNav-Button"><a href="#">4</a></li>
+    <li class="MainNav-Button"><a href="#">5</a></li>
+  </ul>
+  
+  <hr>
+  <h3>or enlarged</h3>
+  <ul class="Nav Nav_Large MainNav">
+    <li class="MainNav-Button MainNav-Button_LeftOfActive"><a href="#">1</a></li>
+    <li class="MainNav-Button MainNav-Button_Active"><a href="#">2</a></li>
+    <li class="MainNav-Button MainNav-Button_RightOfActive"><a href="#">3</a></li>
+  </ul>
+
+  <p>Original dribbble shot by: <a href="http://dribbble.com/justd" class="TextLink">JustD</a> - Permission was sought before attempting this CSS challenge.</p>
+<a href="https://twitter.com/jnowland" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @jnowland</a>
+  
+  
+  
+  
+  //JS to make it work on single page/codepen
+var MainNav = $('.MainNav-Button');
+
+MainNav.on('mousedown', function(){
+  var $this = $(this);
+  $this.parent().find('.MainNav-Button').removeClass('MainNav-Button_LeftOfActive MainNav-Button_RightOfActive MainNav-Button_Active');
+  $this.addClass('MainNav-Button_Active').prev().addClass('MainNav-Button_LeftOfActive');
+  $this.next().addClass('MainNav-Button_RightOfActive');
+});
+
+MainNav.on('click', function(event){
+  event.preventDefault();
+});  
+  
+  
+  
+  
+  
+  
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    
+</div>
