@@ -3,7 +3,7 @@
 <html lang="pl">
 <head>
 <meta charset="utf-8">
-<title>#DarkButton</title>
+<title>radio#DarkButton</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="HandheldFriendly" content="true">
 <meta name="mobile-web-app-capable" content="yes"> 
@@ -135,21 +135,21 @@ body {
 
 <div class="klawiatura">
     <div class="klawisze">
-            <div class="button circle" >
+        <div class="button circle" onClick='radioFETCH("v=m");' >
             <i class="fal fa-volume-down"></i>
-            </div>
-            <div class="button circle">
+        </div>
+        <div class="button circle" onClick='radioFETCH("v=p");' >
             <i class="fal fa-volume-up"></i>
-            </div>
-            <div class="button circle">
+        </div>
+        <div class="button circle" onClick='radioFETCH("pr=0");'>
             <i class="fal fa-backward"></i>
-            </div>
-            <div class="button circle">
+        </div>
+        <div class="button circle" onClick='radioFETCH("nx=0");'>
             <i class="fal fa-forward"></i>
-            </div>
-            <div class="button square">
+        </div>
+        <div class="button square">
             <i class="fa-light fa-gear"></i>
-            </div>        
+        </div>        
     </div>
     <div class="klawisze">
             <div class="button square">
@@ -168,8 +168,7 @@ body {
             <div class="button square">
             <i class="fal fa-radio" aria-hidden="true"></i>
             </div>
-    </div>
-
+    </div> 
     <div class="klawisze">
         <div class="button rectangle">
         <i class="fa-light fa-1"></i>
@@ -200,9 +199,29 @@ body {
         <i class="fa-light fa-8"></i>
     </div> 
     </div>
+
+   
 </div>
 
+<div style="display:none">
+<div id="title"></div>
+<div class="radia"></div>
+<div class="dysk bg shadow">
+    <p class="center"><button onClick='dyskZapisz(this);' class="info" style="width:12em; padding: 0.75em;" >Zapisz na dysku</button></p>
+    <p class="fileUpload">
+      <input type="file" class="upload" id="file-input"/>
+      <span id="file-input-span">Wczytaj z dysku</span>
+    </p> 
+    <br />
+
+    <p class="center"><a href="/radiosorter" class="button fontInherit" >Sortowanie stacji</a></p>
+</div>
+</div>
+
+<script src="https://znakzorro.github.io/radioTunel/public/js/cartoon.js"></script>
  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js" integrity="sha512-csNcFYJniKjJxRWRV1R7fvnXrycHP6qDR21mgz1ZP55xY5d+aHLfo9/FcGDQLfn2IfngbAHd8LdfsagcCqgTcQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <script>
 </script>  
   </body>
