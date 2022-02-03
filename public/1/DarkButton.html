@@ -112,12 +112,13 @@ body {
     font-family: monospace;
     font-weight: normal;
     font-size: 25px;
- 
+    max-width: 12em;
     color: #fff;    
 }
 .klawiatura {
     margin-top: 66px;
 }
+.right {float: right;}
 </style>  
 </head>
 <body>
@@ -126,13 +127,14 @@ body {
 <div id="lcdekran">
     <img src="https://mario44.github.io/radioTunel/public/img/LCD1602_Blue.png" >
         <div class="text">
-            <p>01234abcdefghijklmno</p>
-            <p>fghijklmnoprstu01234</p>
-            <p>098765ABCDEFGHIJKLMN</p>
-            <p>!@#$%^&*()_+|}{":?<></p>
+          <p>S:<span id="sta">1</span>, V:<span id="vol">1</span></p>
+          <p><span id="name">radio</span>, <span id="rsid">0</span>dB</p>    
+          <p><span id="info">info</span></p>
+          
         </div>
 </div>
-
+      
+      
 <div class="klawiatura">
     <div class="klawisze">
         <div class="button circle" onClick='radioFETCH("v=m");' >
@@ -223,6 +225,14 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js" integrity="sha512-csNcFYJniKjJxRWRV1R7fvnXrycHP6qDR21mgz1ZP55xY5d+aHLfo9/FcGDQLfn2IfngbAHd8LdfsagcCqgTcQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
+
+document.addEventListener("DOMContentLoaded",function(){
+    /*let linie = document.querySelectorAll(".text p");
+    linie[0].textContent = Math.random();
+    linie[1].textContent = Math.random();
+    linie[2].textContent = Math.random();
+    linie[3].textContent = Math.random();*/
+})  
 </script>  
   </body>
 </html>
