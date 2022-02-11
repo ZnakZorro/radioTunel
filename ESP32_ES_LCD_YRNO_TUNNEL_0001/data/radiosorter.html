@@ -1,0 +1,326 @@
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>RadioSort</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="HandheldFriendly" content="true">
+  <meta name="mobile-web-app-capable" content="yes"> 
+  <meta name="theme-color" content="#800">
+  <link rel="shortcut icon" type="image/svg+xml" size="any" href="https://znakzorro.github.io/radioTunel/public/img/radio.svg">
+  <link rel="stylesheet" href="https://znakzorro.github.io/radioTunel/public/css/cartoon.css" />
+  <script src="https://znakzorro.github.io/radioTunel/public/js/hnl.mobileConsole.js"></script>
+<style>
+ *{
+		margin0;
+		padding:0;
+	}
+	body{
+		/*background: linear-gradient(to right, #ACBB78, #F7F8F8); */
+        background-color: #000;
+	}
+  div {margin:0!important; padding:0!important;}
+  .wrap {
+    margin: auto;
+    z-index: 2;
+    margin: auto;
+    padding: 0.35rem;
+    max-width: 100%!important;
+}
+	ul{
+		margin:2em auto;
+		position:relative;	
+        display: block;
+        text-align:center;
+        width: 15em;
+        max-width: 70vw;
+	}
+	li{
+        display: block;
+        margin-top: 0.5em!important;
+		text-align:center;
+		cursor:move!important;
+	}
+    #kosz,.klawisze {
+    width: 100%;
+    display: flex;
+    min-height: 4em;
+    background-color: #9bf;
+    justify-content: space-around;
+    align-items: center;      
+    } 
+    button.info, .button.info {
+        width: 220px!important;
+    }    
+    .active {background-color: red!important;}
+    .active2 {background-color: gold!important;}
+    .bodyactive{background-color: navy!important;}
+</style>
+<script>
+const zapisz=()=>{
+    let stacje = document.querySelectorAll("ul#stacje li");
+    console.log(stacje)
+    let streamsDEF = [];
+    stacje.forEach((s)=>{
+        let d=s.dataset
+        console.log(s.style.display)
+        if (s.style.display != "none") streamsDEF.push({"a":d.a,"n":d.n,"s":d.s})
+    })
+    console.log(streamsDEF);
+    localStorage.setItem("streamsDEF", JSON.stringify(streamsDEF));
+    alert("Zapisano");
+}
+</script>
+</head>
+<body>
+
+<div style="width:100%; display: grid;">
+    <div class="wrap">
+        <div id="kosz"> Kosz</div>
+        <ul id="stacje">
+            <li style="background:red;">1</li>
+            <li style="background:orange;">2</li>
+            <li style="background:yellow;">3</li>
+            <li style="background:green;">4</li>
+            <li style="background:blue;">5</li>
+            <li style="background:indigo;">6</li>
+            <li style="background:violet;">7</li>
+        </ul>
+    </div>
+    <div class="wrap klawisze">
+        <button class="btn warn" onClick="zapisz()">Zapisz</button> 
+        <button class="btn warn" style="float: right;" onClick="location.href='./';">KONIEC</button>
+    </div>
+</div>
+
+<script>
+if (localStorage.getItem("streamsDEF")){ 
+        let odczyt = localStorage.getItem("streamsDEF");
+        let obj = JSON.parse(odczyt)
+        //console.log(obj);
+       
+        let html = "";
+        obj.forEach((o,nr)=>{
+            //console.log(o);
+            html += `<li data-nr="${nr}" data-n="${o.n}" data-a="${o.a}" data-s="${o.s}" class="button info">${o.n}</li>`;
+        });
+        let stacje = document.getElementById("stacje");
+        stacje.innerHTML = html; 
+}
+let kosz = document.getElementById("kosz");
+
+    let lis = document.querySelectorAll("li");
+    let ul = document.querySelector("ul");
+    let obj;
+    let initX, initY, firstX, firstY;
+    let arr = [].slice.call(lis);
+    let a = -1,
+      b = -1;
+    let intercambiabilidad = 0;
+    function indexar(arr) {
+      (a = -1), (b = -1);
+      let indice = 0;
+      arr.forEach(function (li) {
+        li.setAttribute("indice", indice);
+        indice++;
+        makeDragable(li);
+      });
+    }
+    function dumpCSSText(element) {
+      let s = "";
+      let o = getComputedStyle(element);
+      for (let i = 0; i < o.length; i++) {
+        s += o[i] + ":" + o.getPropertyValue(o[i]) + ";";
+      }
+      return s;
+    }
+    function makeDragable(ref) {
+      ref.addEventListener(
+        "mousedown",
+        function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          intercambiabilidad = 1;
+          let clon = ref.cloneNode(1);
+          clon.style.cssText = dumpCSSText(ref);
+          ul.insertBefore(clon, ref);
+          ref.style.position = "absolute";
+          ref.style.opacity = ".5";
+          ref.style.left = clon.offsetLeft + "px";
+          ref.style.top = clon.offsetTop + "px";
+          ref.style.zIndex = 1000;
+          obj = ref;
+          a = obj.getAttribute("indice");
+          initX = this.offsetLeft;
+          initY = this.offsetTop;
+          firstX = e.pageX;
+          firstY = e.pageY;
+          window.addEventListener("mousemove", dragIt, false);
+          window.addEventListener(
+            "mouseup",
+            function () {
+              this.removeEventListener("mousemove", dragIt, false);
+              intercambiar();
+
+            },
+            false
+          );
+        },
+        false
+      );
+      ref.addEventListener(
+        "touchstart",
+        function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          intercambiabilidad = 1;
+          let clon = ref.cloneNode(1);
+          clon.style.cssText = dumpCSSText(ref);
+          ul.insertBefore(clon, ref);
+          ref.style.position = "absolute";
+          ref.style.opacity = ".5";
+          ref.style.left = clon.offsetLeft + "px";
+          ref.style.top = clon.offsetTop + "px";
+          ref.style.zIndex = 1000;
+          obj = ref;
+          a = obj.getAttribute("indice");
+          initX = this.offsetLeft;
+          initY = this.offsetTop;
+          let touch = e.touches;
+          firstX = touch[0].pageX;
+          firstY = touch[0].pageY;
+          obj.addEventListener("touchmove", swipeIt, false);
+          obj.addEventListener(
+            "touchend",
+            function () {
+              this.removeEventListener("touchmove", swipeIt, false);
+              intercambiar();
+              //console.log(this)
+            },
+            false
+          );
+        },
+        false
+      );
+    }
+    function checkSuperposicion() {
+        let xx = parseInt(obj.style.left);
+        let yy = parseInt(obj.style.top);
+        let deltaX = xx - initX;
+        //console.log(deltaX)
+        if (yy<-90 || deltaX>180){
+            //console.log(obj.style.left,parseInt(obj.style.top),obj.textContent)
+            kosz.classList.add("active");
+            document.body.classList.add("bodyactive");
+        } else {
+          kosz.classList.remove("active");
+          document.body.classList.remove("bodyactive");
+        }
+        //console.log(obj)
+      b = -1;
+      arr.forEach(function (li) {
+        let ow = li.offsetWidth / 2;
+        let oh = li.offsetHeight / 2;
+        let x = li.offsetLeft + ow;
+        let y = li.offsetTop + oh;
+        let x2 = obj.offsetLeft + ow;
+        let y2 = obj.offsetTop + oh;
+        if (Math.abs(x - x2) <= ow && Math.abs(y - y2) <= oh) {
+          li.style.opacity = 0.5;
+          if (li.getAttribute("indice") != obj.getAttribute("indice"))
+            b = li.getAttribute("indice");
+        } else {
+          li.style.opacity = 1;
+        }
+      });
+    }
+    function dragIt(e) {
+      let dist = initX + e.pageX - firstX;
+      let dist2 = initY + e.pageY - firstY;
+      
+      e.preventDefault();
+      e.stopPropagation();
+      obj.style.left = dist + "px";
+      obj.style.top = dist2 + "px";
+      checkSuperposicion();
+    }
+    function swipeIt(e) {
+      let contact = e.touches;
+      let dist = initX + contact[0].pageX - firstX;
+      let dist2 = initY + contact[0].pageY - firstY;
+      e.preventDefault();
+      e.stopPropagation();
+      obj.style.left = dist + "px";
+      obj.style.top = dist2 + "px";
+      checkSuperposicion();
+    }
+    /*qqqqqqqqqqqqqqqqqqqqqqqqqqq*/
+    function kasujOBJ(obj){
+        let name = obj.textContent;
+        //if (confirm("Czy kasować "+name+"?")) 
+        { 
+            let nr = obj.dataset.nr;
+            let wybrane = document.querySelectorAll('[data-nr="'+nr+'"]');
+            if (wybrane[0]) wybrane[0].remove();
+            if (wybrane[0]) wybrane[1].remove();
+            kosz.classList.remove("active");
+            kosz.classList.remove("active2");
+            document.body.classList.remove("bodyactive");
+        }
+        //alert("Skasowano "+name+"!")
+    }
+    function intercambiar() {        
+        let xx = parseInt(obj.style.left);
+        let yy = parseInt(obj.style.top);
+        let deltaX = xx - initX;
+        //let deltaY = yy - initY;
+        //console.log(xx,yy,initX,initY,deltaX,deltaY);
+        //console.log(deltaX);
+        if (yy<-90 || deltaX>180){           
+            kosz.classList.add("active2");
+            kasujOBJ(obj);
+            return;
+        } else kosz.classList.remove("active2");        
+         /*qqqqqqqqqqqqqqqqqqqqqqqqqqq*/
+
+
+      if (!intercambiabilidad) {
+        return;
+      }
+      intercambiabilidad = 0;
+      if (obj && obj.parentNode) obj.parentNode.removeChild(obj);
+    
+      arr = [].slice.call(document.querySelectorAll("li"));
+      let pa = arr[a];
+      let pb = arr[b];
+      if (pa) {
+        pa.style.opacity = 1;
+      }
+      if (pb) {
+        pb.style.opacity = 1;
+      }
+      if (b > -1) {
+        arr.splice(a, 1);
+        arr.splice(b, 0, pa);
+      }
+      renderizar();
+    }
+    function renderizar() {
+      let fragment = document.createDocumentFragment();
+      arr.forEach(function (li) {
+        //console.log(li.cloneNode(1));
+        let clon = li.cloneNode(1);
+        clon.style.opacity = 1;
+        clon.style.cssText = dumpCSSText(li);
+        fragment.appendChild(clon);
+      });
+      ul.innerHTML = "";
+      ul.appendChild(fragment);
+      arr = [].slice.call(document.querySelectorAll("li"));
+      indexar(arr);
+    }
+    indexar(arr);
+    
+    </script>
+    
+</body>
+</html>
