@@ -1,0 +1,107 @@
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>Balsa-1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="HandheldFriendly" content="true">
+  <meta name="mobile-web-app-capable" content="yes"> 
+  <meta name="theme-color" content="#800">
+  <link rel="manifest" href="https://znakzorro.github.io/radioTunel/public/balsa.web.json">  
+<link rel="shortcut icon" type="image/svg+xml" size="any" href="https://znakzorro.github.io/radioTunel/public/img/balsa.svg"> 
+<link rel="stylesheet" href="https://znakzorro.github.io/radioTunel/public/css/balsa.css" />
+<script>
+  let aktualizacja=()=>{
+    let page = '<html lang="pl">'+document.body.parentElement.innerHTML+'</html>';
+    page = page.replace(/\s\s+/g, ' ');
+    console.log(page);
+    radioFETCH("page="+page);
+  }
+</script>
+</head>
+    
+<body>
+<div id="app">
+  <div class="wrap">
+      <p><span id="title">cartoonTunnel</span> [<span id="rsid"></span>dB]</p>  
+      <div id="info" class="shadow"></div> 
+      <div class="col">         
+          <button onClick='radioFETCH("v=m");'class="def">Vol --</button> 
+              <span id="vol">0</span>  
+          <button onClick='radioFETCH("v=p");' class="def">Vol ++</button> &nbsp;  &nbsp; 
+          <button onClick='refreshInfo(0);' class="navy">Info()</button> 
+          <br />  
+          <button onClick='radioFETCH("pr=0");'>Sta --</button> 
+              <span id="sta">0</span>  
+          <button onClick='radioFETCH("nx=0");'>Sta ++</button>  &nbsp;  &nbsp; 
+          <button onClick='location.reload();' class="navy">Relo()</button> 
+          <hr> 
+          <p><span id="name">Stacje</span> <small><span id="stream"></span></small></p> 
+          <div class="radia"></div>      
+      </div> 
+          
+      <label for="state">
+          <div class="button">Więcej</div>
+      </label>
+      <input type="checkbox" id="state" hidden>
+      <div class="acordion">   
+   
+        <div class="sm sleep">
+          <p>Wyłącz za:</p>
+          <button data-time="15"  onClick='goSleep(this);'>15m</button>
+          <button data-time="60"  onClick='goSleep(this);'>1h</button>
+          <button data-time="120" onClick='goSleep(this);'>2h</button>
+          <button data-time="240" onClick='goSleep(this);'>4h</button>
+          <button data-time="480" onClick='goSleep(this);'>8h</button>
+      </div> 
+
+      <div class="sm eq tone">
+        <p>Filtry:</p>
+        <button  data-tone="0" onClick='setTone(this);'>Mowa</button>
+        <button  data-tone="1" onClick='setTone(this);'>Muzyka</button>
+        <button  data-tone="2" onClick='setTone(this);'>Jazz</button>
+        <button  data-tone="3" onClick='setTone(this);'>Classic</button>
+        <button  data-tone="4" onClick='setTone(this);'>Flat</button>
+      </div>      
+        
+      <div class="admi">
+          <button onclick='zapiszDane();' class="warn">Zapisz</button>
+          <button onclick='aktualizacja();' class="warn">Aktualizacja</button>
+          <button onclick='radioFETCH("r=0");' class="warn">Reboot</button>
+          <button onClick='radioFETCH("r=1");'  class="warn">Replay</button>
+          <button class="warn" onClick="UsunAtualna()">Usuń stację</button>
+      </div> 
+
+      <div class="add bg shadow">
+          <p>Dodaj stację</p>
+          <p><span>Name:</span> <input type="text" id="newName"></p>
+          <p><span>URL:</span> <input type="text" id="newURL"></p>
+          <p><button onClick='sendURL(this);'>Dodaj</button></p>
+      </div>
+
+      <div class="dysk bg shadow">
+          <p class="center"><button onClick='dyskZapisz(this);' class="info" style="width:12em; padding: 0.75em;" >Zapisz na dysku</button></p>
+          <p class="fileUpload">
+            <input type="file" class="upload" id="file-input"/>
+            <span id="file-input-span">Wczytaj z dysku</span>
+          </p> 
+          <br />
+
+          <p class="center"><a href="/radiosorter" class="button fontInherit" >Sortowanie stacji</a></p>
+      </div>
+
+      <div class="lins bg shadow" >
+            <a href="https://www.radio-browser.info/" target="_blank" class="btn button">radio-browser</a>
+            <a href="https://znakzorro.github.io/radioTunel/public/top.html" target="_blank" class="btn button">TOP20</a>  
+      </div>
+
+   </div>
+      
+  </div>
+</div>
+
+  <script src="https://znakzorro.github.io/radioTunel/public/js/balsa.js"></script>
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js" integrity="sha512-csNcFYJniKjJxRWRV1R7fvnXrycHP6qDR21mgz1ZP55xY5d+aHLfo9/FcGDQLfn2IfngbAHd8LdfsagcCqgTcQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+</body>
+</html>
