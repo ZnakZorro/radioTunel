@@ -8,7 +8,7 @@
     "theme_color": "#888888",
     "icons": [ 
         {
-            "src": "balsa.svg",
+            "src": "https://znakzorro.github.io/radioTunel/public/img/balsa.svg",
             "sizes": "48x48 72x72 96x96 128x128 150x150 256x256 512x512 1024x1024",
             "type": "image/svg+xml",
             "purpose": "any"
