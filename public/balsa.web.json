@@ -2,7 +2,7 @@
     "name": "BALSA",
     "short_name": "BALSA",
     "description": "BALSA",
-    "start_url": "/",
+    "start_url": "/index.html",
     "display": "standalone",
     "background_color": "#888888",
     "theme_color": "#888888",
