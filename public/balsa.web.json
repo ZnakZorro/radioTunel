@@ -2,7 +2,7 @@
     "name": "BALSA",
     "short_name": "BALSA",
     "description": "BALSA",
-    "start_url": "/index.html",
+    "start_url": "https://znakzorro.github.io/radioTunel/public/balsa.html",
     "display": "standalone",
     "background_color": "#888888",
     "theme_color": "#888888",
