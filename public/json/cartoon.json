@@ -2,9 +2,10 @@
     {"n": "TOK-FM",         "s":"http://pl-play.adtonos.com/tok-fm"},
     {"n": "RNS",            "s":"http://stream.rcs.revma.com/ypqt40u0x1zuv"},
     {"n": "357",            "s":"http://stream.rcs.revma.com/ye5kghkgcm0uv"}, 
+    {"n": "SwissJazz",      "s":"http://stream.srg-ssr.ch/m/rsj/mp3_128"},
     {"n": "SwissClassic",   "s":"http://stream.srg-ssr.ch/m/rsc_de/mp3_128"},
     {"n": "ClassicFM",      "s":"http://media-the.musicradio.com/ClassicFM"},
-    {"n": "SwissJazz",      "s":"http://stream.srg-ssr.ch/m/rsj/mp3_128"},
+    
     {"n": "RMF Classic",    "s":"http://www.rmfon.pl/n/rmfclassic.pls"},
     {"n": "Dwojka",         "s":"http://mp3.polskieradio.pl:8952/;"},
     {"n": "RockService",    "s":"http://stream.open.fm/379"},
